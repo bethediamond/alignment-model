@@ -610,13 +610,13 @@
 const GRID = 40;
 const N_AGENTS = 20;
 const RESOURCE_MAX = 4;
-const REGROW_RATE = 0.12;   // high enough for system agents to sustain indefinitely
-const NARROW_TAKE = 0.90;   // narrow agents devastate each cell
-const SYSTEM_TAKE = 0.15;   // system agents take very little
+const REGROW_RATE = 0.025;  // sustainable for system agents, not for narrow
+const NARROW_TAKE = 0.88;   // narrow agents devastate each cell
+const SYSTEM_TAKE = 0.25;   // system agents take modestly
 const NARROW_REPRO = 0.12;
-const SYSTEM_REPRO = 0.08;
-const ENERGY_DECAY = 0.35;
-const MOVE_COST = 0.05;
+const SYSTEM_REPRO = 0.09;
+const ENERGY_DECAY = 0.38;
+const MOVE_COST = 0.06;
 const MAX_HISTORY = 400;
 
 // ─── SIMULATION CLASS ─────────────────────────────────────────────────────────
@@ -695,11 +695,11 @@ class Simulation {
       // Extract
       const gx = Math.floor(a.x) % GRID;
       const gy = Math.floor(a.y) % GRID;
-      // System agents throttle extraction hard when substrate is low
-      let take = isNarrow ? NARROW_TAKE : SYSTEM_TAKE * Math.max(0.1, S * S);
+      // System agents throttle extraction when substrate is low
+      let take = isNarrow ? NARROW_TAKE : SYSTEM_TAKE * Math.max(0.3, S);
       const harvested = this.grid[gx][gy] * take;
       this.grid[gx][gy] = Math.max(0, this.grid[gx][gy] - harvested);
-      a.energy += harvested * (isNarrow ? 1.5 : 2.5);  // system agents are more efficient
+      a.energy += harvested * 1.8;
       a.wealth += harvested;
       a.energy -= ENERGY_DECAY;
       if (a.energy <= 0) a.alive = false;
@@ -741,7 +741,7 @@ class Simulation {
     if (this.narrowPctHistory.length >= MAX_HISTORY) this.narrowPctHistory.shift();
     this.narrowPctHistory.push(narrowPct);
 
-    if (subLevel < 0.05 || this.agents.length === 0) {
+    if ((subLevel < 0.05 || this.agents.length === 0) && this.mode !== 'system') {
       this.collapsed = true;
       this.collapseStep = this.step;
     }
