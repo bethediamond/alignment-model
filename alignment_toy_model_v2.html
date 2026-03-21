@@ -702,8 +702,8 @@ class Simulation {
       // System agents are more efficient — they get more energy per unit extracted
       a.energy += harvested * (isNarrow ? 1.4 : 2.8);
       a.wealth += harvested;
-      // System agents have a resilience floor — sustainable systems don't collapse from starvation
-      if (!isNarrow && a.energy < 2) a.energy = 2;
+      // Pure system sim resilience floor only — mixed sim must be allowed to collapse
+      if (this.mode === 'system' && !isNarrow && a.energy < 2) a.energy = 2;
       a.energy -= ENERGY_DECAY;
       if (a.energy <= 0) a.alive = false;
       if (a.energy > 15) a.energy = 15;
@@ -730,7 +730,7 @@ class Simulation {
 
     this.agents = this.agents.filter(a => a.alive);
 
-    // System sim: maintain minimum viable population
+    // Pure system sim only: maintain minimum viable population
     if (this.mode === 'system' && this.agents.length < 5) {
       for (let i = this.agents.length; i < 8; i++) {
         this.agents.push({
@@ -761,6 +761,11 @@ class Simulation {
     this.narrowPctHistory.push(narrowPct);
 
     if ((subLevel < 0.05 || this.agents.length === 0) && this.mode !== 'system') {
+      this.collapsed = true;
+      this.collapseStep = this.step;
+    }
+    // Mixed sim: also collapse if narrow agents have completely taken over and substrate is failing
+    if (this.mode === 'mixed' && subLevel < 0.12 && this.getNarrowPct() > 0.7) {
       this.collapsed = true;
       this.collapseStep = this.step;
     }
