@@ -360,11 +360,13 @@
 const GRID = 40;          // grid cells per side
 const N_AGENTS = 20;      // agents per sim
 const RESOURCE_MAX = 4;   // max resource per cell
-const REGROW_RATE = 0.008; // resource regrowth per step per cell
-const NARROW_TAKE = 0.85; // narrow agents take 85% of cell resources
-const SYSTEM_TAKE = 0.35; // system agents take 35%, leaving 65%
-const NARROW_REPRO = 0.15;
-const SYSTEM_REPRO = 0.10;
+const REGROW_RATE = 0.015; // regrowth — system agents can sustain, narrow cannot at scale
+const NARROW_TAKE = 0.92; // narrow agents take 92% — devastating
+const SYSTEM_TAKE = 0.30; // system agents take 30%, substrate recovers
+const NARROW_REPRO = 0.25; // narrow agents reproduce aggressively
+const SYSTEM_REPRO = 0.08;
+const NARROW_MAX_AGENTS = 120; // narrow agents overpopulate, accelerating collapse
+const SYSTEM_MAX_AGENTS = 60;
 const ENERGY_DECAY = 0.5;
 const MOVE_COST = 0.1;
 
@@ -473,8 +475,9 @@ class Simulation {
     // Reproduction
     const alive = this.agents.filter(a => a.alive);
     const reproRate = this.mode === 'narrow' ? NARROW_REPRO : SYSTEM_REPRO;
+    const maxAgents = this.mode === 'narrow' ? NARROW_MAX_AGENTS : SYSTEM_MAX_AGENTS;
     for (let a of alive) {
-      if (a.energy > 8 && Math.random() < reproRate && alive.length < 60) {
+      if (a.energy > 8 && Math.random() < reproRate && alive.length < maxAgents) {
         this.agents.push({
           x: a.x + (Math.random()-0.5)*2,
           y: a.y + (Math.random()-0.5)*2,
@@ -497,7 +500,7 @@ class Simulation {
     this.substrateLevel = totalRes / maxPossible;
     this.totalWealth = this.agents.reduce((s,a) => s + a.wealth, 0);
 
-    if ((this.substrateLevel < 0.03 || this.agents.length === 0) && this.mode === 'narrow') {
+    if ((this.substrateLevel < 0.08 || this.agents.length === 0) && this.mode === 'narrow') {
       this.collapsed = true;
     }
   }
