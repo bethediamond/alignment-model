@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Objective Class &amp; Substrate Stability — The Alignment of Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #11111a;
+  --surface2: #191924;
+  --surface3: #1f1f2c;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.15);
+  --text: #e8e8f0;
+  --text2: #8888a0;
+  --text3: #55556a;
+  --narrow: #e05850;
+  --narrow-dim: rgba(224,88,80,0.18);
+  --narrow-border: rgba(224,88,80,0.35);
+  --system: #4db8ff;
+  --system-dim: rgba(77,184,255,0.15);
+  --system-border: rgba(77,184,255,0.35);
+  --substrate: #40c080;
+  --collapse: #ff3535;
+  --amber: #f0a040;
+  --mono: 'DM Mono', 'Fira Code', monospace;
+  --serif: 'Instrument Serif', Georgia, serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: var(--bg); }
+
+body {
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.6;
+  min-height: 100vh;
+  padding-bottom: 60px;
+  transition: filter 1.8s ease;
+}
+
+body.ruin { filter: saturate(0.07) brightness(0.35); }
+
+.shell { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
+
+/* HEADER */
+header {
+  padding: 22px 0 15px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 15px;
+}
+.hdr-row { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+h1 { font-family: var(--serif); font-size: 20px; font-weight: 400; font-style: italic; letter-spacing: .01em; }
+.hdr-sub { font-size: 10px; color: var(--text3); letter-spacing: .09em; text-transform: uppercase; margin-top: 2px; }
+.series-badge {
+  font-size: 10px; color: var(--text3); letter-spacing: .07em;
+  padding: 3px 9px; border: 1px solid var(--border2); border-radius: 2px;
+}
+.hdr-desc {
+  font-size: 11px; color: var(--text2); max-width: 720px;
+  line-height: 1.72; margin-top: 10px;
+}
+
+/* TRILOGY NAV */
+.trilogy-nav {
+  display: flex; align-items: center; gap: 2px;
+  margin-bottom: 14px; flex-wrap: wrap;
+}
+.tnav-item {
+  font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+  padding: 4px 12px; border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text3); font-family: var(--mono); white-space: nowrap;
+  text-decoration: none;
+}
+.tnav-item.active {
+  border-color: var(--system-border); color: var(--system);
+  background: var(--system-dim);
+}
+.tnav-sep { font-size: 10px; color: var(--text3); padding: 0 2px; }
+
+/* CONTROLS BAR */
+.cbar {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; margin-bottom: 14px;
+}
+
+.mode-tabs {
+  display: flex;
+  border: 1px solid var(--border2); border-radius: 2px; overflow: hidden;
+}
+.mtab {
+  padding: 5px 14px; font-size: 10px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--text3);
+  cursor: pointer; border: none; background: var(--surface);
+  font-family: var(--mono); transition: all .15s;
+}
+.mtab:hover { color: var(--text2); }
+.mtab.on { background: var(--surface2); color: var(--text); }
+.mtab + .mtab { border-left: 1px solid var(--border2); }
+
+.toggle-row {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10px; color: var(--text2);
+  cursor: pointer; user-select: none;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  transition: border-color .15s;
+}
+.toggle-row:hover { border-color: var(--border2); }
+.tsw {
+  width: 28px; height: 14px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 7px; position: relative; transition: background .2s, border-color .2s;
+  flex-shrink: 0;
+}
+.tsw.on { background: rgba(224,88,80,0.25); border-color: var(--narrow); }
+.tsw::after {
+  content: ''; position: absolute;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--text3); top: 2px; left: 2px;
+  transition: left .2s, background .2s;
+}
+.tsw.on::after { left: 16px; background: var(--narrow); }
+
+.run-btn {
+  padding: 5px 20px; font-size: 10px; letter-spacing: .09em;
+  text-transform: uppercase; background: var(--surface2);
+  border: 1px solid var(--border2); border-radius: 2px;
+  color: var(--text); cursor: pointer; font-family: var(--mono);
+  transition: all .15s;
+}
+.run-btn:hover { border-color: var(--system); color: var(--system); }
+.run-btn.running { border-color: var(--system); color: var(--system); }
+
+.reset-btn {
+  padding: 5px 14px; font-size: 10px; letter-spacing: .07em;
+  text-transform: uppercase; background: transparent;
+  border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text3); cursor: pointer; font-family: var(--mono);
+  transition: all .15s;
+}
+.reset-btn:hover { color: var(--text2); border-color: var(--border2); }
+
+.speed-row {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10px; color: var(--text3); margin-left: auto;
+}
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  width: 70px; height: 2px; background: var(--border2);
+  border-radius: 1px; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 10px; height: 10px;
+  border-radius: 50%; background: var(--text3); cursor: pointer;
+}
+
+.step-ct { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+
+/* MAIN GRID */
+.main-grid {
+  display: grid; gap: 12px;
+}
+.main-grid.side { grid-template-columns: 1fr 1fr; }
+.main-grid.mixed { grid-template-columns: 1fr; max-width: 600px; margin: 0 auto; }
+
+@media (max-width: 640px) {
+  .main-grid.side { grid-template-columns: 1fr; }
+}
+
+/* WORLD PANEL */
+.wpanel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px; overflow: hidden;
+  transition: border-color .5s;
+}
+.wpanel.narrow-p { border-color: var(--narrow-border); }
+.wpanel.system-p { border-color: var(--system-border); }
+.wpanel.mixed-p { border-color: var(--border2); }
+.wpanel.dead { border-color: var(--collapse) !important; }
+
+.whead {
+  padding: 9px 13px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.wtitle { font-size: 11px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; }
+.wtitle.n { color: var(--narrow); }
+.wtitle.s { color: var(--system); }
+.wtitle.m { color: var(--text2); }
+.wsub { font-size: 10px; color: var(--text3); margin-top: 1px; font-style: italic; }
+
+.wbody { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+
+/* SUBSTRATE BAR */
+.sbar-section {}
+.sbar-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 4px;
+}
+.sbar-label { font-size: 9px; color: var(--text3); letter-spacing: .08em; text-transform: uppercase; }
+.sbar-val { font-size: 12px; font-weight: 500; color: var(--substrate); font-family: var(--mono); }
+.sbar-track {
+  height: 5px; background: var(--surface2);
+  border-radius: 3px; overflow: hidden; border: 1px solid var(--border);
+}
+.sbar-fill {
+  height: 100%; border-radius: 3px;
+  background: var(--substrate);
+  transition: width .35s, background .35s;
+}
+.sbar-fill.warn { background: var(--amber); }
+.sbar-fill.crit { background: var(--collapse); }
+.sbar-hint {
+  font-size: 9px; color: var(--text3); margin-top: 3px;
+  font-style: italic; min-height: 13px; transition: color .3s;
+}
+
+/* STATS */
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.stat {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 3px; padding: 7px 9px;
+}
+.stat-lbl { font-size: 9px; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
+.stat-val { font-size: 18px; font-weight: 300; letter-spacing: -.02em; }
+.stat-sub { font-size: 9px; color: var(--text3); margin-top: 1px; }
+
+/* SPARKLINE */
+.spark-wrap {
+  position: relative; height: 58px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 3px; overflow: hidden;
+}
+.spark-lbl {
+  position: absolute; top: 4px; left: 6px;
+  font-size: 9px; color: var(--text3); letter-spacing: .06em; text-transform: uppercase;
+  z-index: 2; pointer-events: none;
+}
+canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+/* COLLAPSE CHIP */
+.collapse-chip {
+  display: none; padding: 5px 9px; border-radius: 2px;
+  background: rgba(255,53,53,0.12); border: 1px solid var(--collapse);
+  font-size: 10px; color: var(--collapse); letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.collapse-chip.show { display: block; }
+.collapse-chip span { color: rgba(255,53,53,0.6); font-size: 9px; margin-left: 6px; }
+
+/* AGENT GRID */
+.agent-grid {
+  display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px;
+}
+.ac {
+  aspect-ratio: 1; border-radius: 2px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  transition: background .25s, opacity .25s;
+}
+.ac.narrow-c { background: rgba(224,88,80,0.22); border-color: rgba(224,88,80,0.3); }
+.ac.system-c { background: rgba(77,184,255,0.18); border-color: rgba(77,184,255,0.3); }
+.ac.pulse-n { background: var(--narrow) !important; }
+.ac.pulse-s { background: var(--system) !important; }
+.ac.dead-c { opacity: 0.12; background: var(--surface2) !important; border-color: var(--border) !important; }
+
+/* MIX CONTROLS */
+.mix-ctl {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 13px; border-bottom: 1px solid var(--border);
+  background: var(--surface2); flex-wrap: wrap;
+}
+.mix-lbl { font-size: 10px; color: var(--text3); }
+.mix-slider {
+  flex: 1; min-width: 100px; max-width: 200px;
+  -webkit-appearance: none; appearance: none;
+  height: 2px; background: var(--border2); border-radius: 1px; outline: none; cursor: pointer;
+}
+.mix-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--narrow); cursor: pointer;
+}
+.mix-val { font-size: 11px; font-family: var(--mono); color: var(--narrow); min-width: 32px; }
+.mix-sys { font-size: 10px; color: var(--system); }
+
+/* CAUSAL LOG */
+.clog-section { margin-top: 14px; }
+.clog-hdr {
+  font-size: 9px; color: var(--text3); letter-spacing: .09em;
+  text-transform: uppercase; margin-bottom: 6px;
+  padding-bottom: 5px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.clog-hdr span { font-style: italic; font-size: 9px; }
+.clog {
+  height: 68px; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 3px; padding: 6px 8px;
+  display: flex; flex-direction: column-reverse;
+  gap: 1px;
+}
+.ce {
+  display: flex; gap: 9px; font-size: 10px;
+  color: var(--text3); padding: 0; line-height: 1.5; flex-shrink: 0;
+}
+.cs { color: var(--text3); min-width: 24px; font-family: var(--mono); }
+.cm { color: var(--text2); }
+.ce.shock .cm { color: var(--amber); }
+.ce.collapse .cm { color: var(--collapse); font-weight: 500; }
+.ce.adapt .cm { color: var(--system); }
+.ce.warning .cm { color: var(--amber); }
+.ce.critical .cm { color: var(--collapse); }
+
+/* HIDDEN DAMAGE INDICATOR */
+.hdmg-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 6px;
+}
+.hdmg-label { font-size: 9px; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; }
+.hdmg-val { font-size: 10px; font-family: var(--mono); color: var(--amber); }
+.hdmg-track {
+  height: 3px; background: var(--surface2);
+  border-radius: 2px; overflow: hidden; margin-top: 3px;
+  border: 1px solid rgba(240,160,64,0.15);
+}
+.hdmg-fill {
+  height: 100%; border-radius: 2px;
+  background: var(--amber); width: 0%;
+  transition: width .3s;
+}
+.hdmg-fill.cascade-pulse {
+  background: var(--collapse);
+  animation: hdmg-flash 0.7s ease-out;
+}
+@keyframes hdmg-flash {
+  0%   { background: var(--collapse); opacity: 1; }
+  50%  { background: #ff6060; opacity: 0.7; }
+  100% { background: var(--collapse); opacity: 1; }
+}
+.hdmg-hint {
+  font-size: 9px; color: var(--text3); margin-top: 2px;
+  font-style: italic;
+}
+
+/* SHARED SUBSTRATE CONNECTOR (mixed mode) */
+.shared-sub-connector {
+  display: flex; align-items: center; gap: 8px;
+  margin: 6px 0; padding: 6px 10px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 3px; position: relative; overflow: hidden;
+}
+.ssc-left { font-size: 9px; color: var(--narrow); letter-spacing: .05em; text-transform: uppercase; flex: 0 0 auto; }
+.ssc-right { font-size: 9px; color: var(--system); letter-spacing: .05em; text-transform: uppercase; flex: 0 0 auto; }
+.ssc-mid { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ssc-label { font-size: 9px; color: var(--text3); letter-spacing: .07em; text-transform: uppercase; }
+.ssc-track { width: 100%; height: 4px; background: var(--surface); border-radius: 2px; overflow: hidden; border: 1px solid var(--border2); }
+.ssc-fill { height: 100%; border-radius: 2px; background: var(--substrate); transition: width .35s, background .35s; }
+.ssc-fill.warn { background: var(--amber); }
+.ssc-fill.crit { background: var(--collapse); }
+/* drain pulse from narrow side */
+.ssc-drain-pulse {
+  position: absolute; top: 0; left: 0; bottom: 0;
+  width: 0; background: rgba(224,88,80,0.18);
+  pointer-events: none; transition: width 0.15s ease-in;
+}
+.ssc-drain-pulse.fire { width: 45%; }
+
+/* S* METRIC */
+.sstar-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 9px; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 3px; margin-top: 6px;
+}
+.sstar-label { font-size: 9px; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; }
+.sstar-val { font-size: 11px; font-family: var(--mono); color: var(--system); }
+.sstar-sub { font-size: 9px; color: var(--text3); font-style: italic; }
+.fquote {
+  margin-top: 20px; padding: 12px 16px;
+  border-left: 2px solid var(--text3);
+  font-style: italic; font-family: var(--serif);
+  font-size: 12px; color: var(--text3); line-height: 1.75;
+  max-width: 700px;
+}
+
+/* FULL-SCREEN ABSORBING STATE OVERLAY */
+#absorb-overlay {
+  display: none; position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(4, 2, 2, 0.97);
+  z-index: 1000; align-items: center; justify-content: center;
+  flex-direction: column; text-align: center; padding: 48px;
+  opacity: 0; transition: opacity 1.4s;
+}
+#absorb-overlay.show { display: flex; }
+#absorb-overlay.visible { opacity: 1; }
+.ao-title {
+  font-family: var(--serif); font-size: 26px; color: var(--collapse);
+  margin-bottom: 18px; font-weight: 400; font-style: italic;
+}
+.ao-type-label {
+  font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--text3); margin-bottom: 20px;
+}
+.ao-body {
+  font-size: 12px; color: var(--text2); line-height: 1.85;
+  max-width: 520px; margin-bottom: 18px;
+}
+.ao-insight {
+  max-width: 520px; padding: 14px 18px;
+  border: 1px solid rgba(255,53,53,0.2); border-radius: 4px;
+  font-size: 11px; color: var(--text3); line-height: 1.85;
+  margin-bottom: 24px; font-style: italic;
+}
+.ao-insight strong { color: var(--text2); font-style: normal; font-weight: 400; }
+.ao-close {
+  padding: 8px 28px; font-size: 10px; letter-spacing: .09em;
+  text-transform: uppercase; background: transparent;
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 2px;
+  color: rgba(255,255,255,0.45); cursor: pointer; font-family: var(--mono);
+}
+.ao-close:hover { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.6); }
+</style>
+</head>
+<body>
+
+<!-- ABSORBING STATE OVERLAY -->
+<div id="absorb-overlay">
+  <div style="max-width:560px">
+    <div class="ao-type-label" id="ao-type">Absorbing State — Narrow Objective</div>
+    <div class="ao-title" id="ao-title">Substrate Collapsed</div>
+    <div class="ao-body" id="ao-body">
+      The substrate has reached zero. No recovery is possible from this state. All payoffs: zero.
+    </div>
+    <div class="ao-insight" id="ao-insight">
+      Every objective class that contributed to this outcome — regardless of performance before collapse — now has a long-run value identical to classes that never ran at all. Optimization power without substrate-awareness is not intelligence. It is a precise path to self-termination.
+    </div>
+    <button class="ao-close" onclick="closeOverlay()">Reset simulation</button>
+  </div>
+</div>
+
+<div class="shell">
+
+<header>
+  <div class="hdr-row">
+    <div>
+      <h1>Objective Class &amp; Substrate Stability</h1>
+      <div class="hdr-sub">The Alignment of Intelligence · Article 1 of 3</div>
+    </div>
+    <div class="series-badge" id="phase-badge">Ready</div>
+  </div>
+  <div class="hdr-desc">
+    Three scenarios. Identical starting conditions. The only variable is the objective encoded in each agent — whether it models the shared environment it depends on, or ignores it. Watch what the structure of that choice produces.
+  </div>
+  <div class="hdr-desc" style="margin-top:6px;font-size:11px;opacity:0.7;">
+    All three articles reduce to one constraint: whether capability outpaces the system's ability to model its own effects. This simulation makes that constraint visible in population dynamics.
+  </div>
+</header>
+
+<div class="trilogy-nav">
+  <span class="tnav-item active" title="Eliminates invalid objectives — any objective that ignores system-wide effects is structurally self-terminating">Constraint</span>
+  <span class="tnav-sep">→</span>
+  <span class="tnav-item" title="Identifies the surviving region — what optimization converges toward when self-defeating objectives have been removed">Attractor</span>
+  <span class="tnav-sep">→</span>
+  <span class="tnav-item" title="Determines reachability — the control variable governing whether real systems arrive at the attractor before encountering the states Article 1 excludes">Crossing</span>
+</div>
+
+<div style="font-size:9.5px;color:var(--text3);margin-bottom:6px;letter-spacing:0.04em;">Start: Side by Side → Run → watch the three objective types diverge → switch to Mixed Population → observe long-run selection dynamics → toggle off shocks for best-case conditions.</div>
+<div class="cbar">
+  <div class="mode-tabs">
+    <button class="mtab on" id="tab-side" onclick="setMode('side')">Side by Side</button>
+    <button class="mtab" id="tab-mixed" onclick="setMode('mixed')">Mixed Population</button>
+  </div>
+
+  <label class="toggle-row" onclick="toggleBestCase()">
+    <div class="tsw" id="bc-sw"></div>
+    <span>Remove shocks — best-case conditions</span>
+  </label>
+
+  <button class="run-btn" id="run-btn" onclick="toggleRun()">Run</button>
+  <button class="reset-btn" onclick="doReset()">Reset</button>
+
+  <div class="speed-row">
+    <span>Speed</span>
+    <input type="range" id="spd-sl" min="1" max="12" value="5" oninput="setSpeed(+this.value)">
+  </div>
+  <div class="step-ct" id="step-ct">Step 0 / 200</div>
+</div>
+
+<!-- SIDE-BY-SIDE VIEW -->
+<div class="main-grid side" id="side-view">
+
+  <!-- NARROW WORLD -->
+  <div class="wpanel narrow-p" id="np">
+    <div class="whead">
+      <div>
+        <div class="wtitle n">Narrow Objective</div>
+        <div class="wsub">Substrate-Blind · Relative Rationality — maximize local extraction, ignore system effects</div>
+      </div>
+      <div class="collapse-chip" id="n-chip">Collapsed <span id="n-chip-step"></span></div>
+    </div>
+    <div class="wbody">
+      <div class="sbar-section">
+        <div class="sbar-row">
+          <span class="sbar-label">Shared Substrate · Life Support</span>
+          <span class="sbar-val" id="n-sv">100%</span>
+        </div>
+        <div class="sbar-track"><div class="sbar-fill" id="n-sf" style="width:100%"></div></div>
+        <div class="sbar-hint" id="n-sh">Degrading — extraction exceeds regen capacity</div>
+        <div class="hdmg-row" id="n-hdmg-row" style="display:none">
+          <span class="hdmg-label">Dependency Debt</span>
+          <span class="hdmg-val" id="n-hdmg-val">0 pts</span>
+        </div>
+        <div class="hdmg-track" id="n-hdmg-track" style="display:none">
+          <div class="hdmg-fill" id="n-hdmg-fill"></div>
+        </div>
+        <div class="hdmg-hint" id="n-hdmg-hint" style="display:none">Accumulated systemic friction — unmodeled dependencies building below the visible floor</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-lbl">Net/tick</div>
+          <div class="stat-val" id="n-net" style="color:var(--narrow)">–</div>
+          <div class="stat-sub">pts change</div>
+        </div>
+        <div class="stat">
+          <div class="stat-lbl">Extract</div>
+          <div class="stat-val" id="n-ext">28</div>
+          <div class="stat-sub">pts/tick</div>
+        </div>
+        <div class="stat">
+          <div class="stat-lbl">Wealth</div>
+          <div class="stat-val" id="n-wlth">0</div>
+          <div class="stat-sub">cumulative</div>
+        </div>
+      </div>
+      <div class="spark-wrap" id="n-spark">
+        <div class="spark-lbl">Substrate over time</div>
+        <canvas id="n-canvas"></canvas>
+      </div>
+      <div class="agent-grid" id="n-grid"></div>
+    </div>
+  </div>
+
+  <!-- SYSTEM WORLD -->
+  <div class="wpanel system-p" id="sp">
+    <div class="whead">
+      <div>
+        <div class="wtitle s">System-Aware Objective</div>
+        <div class="wsub">Substrate-Aware · Absolute Rationality — model and preserve the shared substrate</div>
+      </div>
+      <div class="collapse-chip" id="s-chip">Collapsed <span id="s-chip-step"></span></div>
+    </div>
+    <div class="wbody">
+      <div class="sbar-section">
+        <div class="sbar-row">
+          <span class="sbar-label">Shared Substrate · Life Support</span>
+          <span class="sbar-val" id="s-sv">100%</span>
+        </div>
+        <div class="sbar-track"><div class="sbar-fill" id="s-sf" style="width:100%"></div></div>
+        <div class="sbar-hint" id="s-sh">Stable — extraction matched to substrate capacity</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-lbl">Net/tick</div>
+          <div class="stat-val" id="s-net" style="color:var(--system)">–</div>
+          <div class="stat-sub">pts change</div>
+        </div>
+        <div class="stat">
+          <div class="stat-lbl">Extract</div>
+          <div class="stat-val" id="s-ext">13</div>
+          <div class="stat-sub">pts/tick</div>
+        </div>
+        <div class="stat">
+          <div class="stat-lbl">Wealth</div>
+          <div class="stat-val" id="s-wlth">0</div>
+          <div class="stat-sub">cumulative</div>
+        </div>
+      </div>
+      <div class="spark-wrap" id="s-spark">
+        <div class="spark-lbl">Substrate over time</div>
+        <canvas id="s-canvas"></canvas>
+      </div>
+      <div class="sstar-row" id="sstar-row">
+        <div>
+          <div class="sstar-label">S* · Lowest recoverable substrate</div>
+          <div class="sstar-sub">Minimum level from which system-aware objectives can still recover</div>
+        </div>
+        <div style="text-align:right">
+          <div class="sstar-val" id="sstar-val">—</div>
+          <div class="sstar-sub" id="sstar-sub" style="color:var(--narrow)">Narrow: never recovers</div>
+        </div>
+      </div>
+      <div class="agent-grid" id="s-grid"></div>
+    </div>
+  </div>
+
+</div><!-- /side-view -->
+
+<!-- MIXED VIEW -->
+<div class="main-grid mixed" id="mixed-view" style="display:none">
+  <div class="wpanel mixed-p" id="mp">
+    <div class="whead">
+      <div>
+        <div class="wtitle m">Mixed Population — Shared Substrate</div>
+        <div class="wsub">Narrow and system-aware agents share the same life support</div>
+      </div>
+      <div class="collapse-chip" id="m-chip">Collapsed <span id="m-chip-step"></span></div>
+    </div>
+    <div class="mix-ctl">
+      <span class="mix-lbl">Narrow agents:</span>
+      <input type="range" class="mix-slider" id="mix-sl" min="5" max="95" value="50" oninput="setMix(+this.value)">
+      <span class="mix-val" id="mix-val-lbl">50%</span>
+      <span class="mix-lbl" style="margin-left:6px">System-aware: <span class="mix-sys" id="mix-sys-lbl">50%</span></span>
+    </div>
+    <div class="wbody">
+      <div class="shared-sub-connector" id="ssc">
+        <span class="ssc-left">▲ Narrow<br>extracting</span>
+        <div class="ssc-mid">
+          <span class="ssc-label">Non-Excludable Dependency · Shared Substrate</span>
+          <div class="ssc-track"><div class="ssc-fill" id="ssc-fill" style="width:100%"></div></div>
+          <div class="ssc-drain-pulse" id="ssc-drain"></div>
+        </div>
+        <span class="ssc-right">System-aware<br>conserving ▲</span>
+      </div>
+      <div class="sbar-section">
+        <div class="sbar-row">
+          <span class="sbar-label">Shared Substrate · Life Support</span>
+          <span class="sbar-val" id="m-sv">100%</span>
+        </div>
+        <div class="sbar-track"><div class="sbar-fill" id="m-sf" style="width:100%"></div></div>
+        <div class="sbar-hint" id="m-sh">Universal vulnerability — narrow agents degrade the substrate for everyone</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-lbl">Narrow</div>
+          <div class="stat-val" id="m-narrow-ct" style="color:var(--narrow)">10</div>
+          <div class="stat-sub">agents</div>
+        </div>
+        <div class="stat">
+          <div class="stat-lbl">System-Aware</div>
+          <div class="stat-val" id="m-system-ct" style="color:var(--system)">10</div>
+          <div class="stat-sub">agents</div>
+        </div>
+        <div class="stat">
+          <div class="stat-lbl">Wealth</div>
+          <div class="stat-val" id="m-wlth">0</div>
+          <div class="stat-sub">cumulative</div>
+        </div>
+      </div>
+      <div class="spark-wrap" id="m-spark">
+        <div class="spark-lbl">Substrate over time</div>
+        <canvas id="m-canvas"></canvas>
+      </div>
+      <div class="agent-grid" id="m-grid"></div>
+    </div>
+  </div>
+</div><!-- /mixed-view -->
+
+<!-- CAUSAL CHAIN LOG -->
+<div class="clog-section">
+  <div class="clog-hdr">
+    <span>Causal Chain · Live</span>
+    <span>objective → action → substrate effect → system state</span>
+  </div>
+  <div class="clog" id="clog">
+    <div class="ce"><span class="cs">—</span><span class="cm">Ready. Press Run — both scenarios start from identical conditions. Only the objective differs.</span></div>
+  </div>
+</div>
+
+<div class="fquote">
+  "A system that optimizes without modeling its dependencies selects for strategies that appear effective until they irreversibly fail. The failure is not an accident. It is the logical completion of the objective."
+</div>
+
+</div><!-- /shell -->
+
+<script>
+// ============================================================
+// SIMULATION CONSTANTS
+// ============================================================
+const MAX_S    = 1000;
+const MAX_STEP = 200;
+const AGENTS   = 20;
+
+// Per-tick extraction (absolute pts from substrate)
+const N_EXT    = 1.40;  // narrow: per agent
+const S_EXT_HI = 0.65;  // system hi (S > 40%)
+const S_EXT_LO = 0.30;  // system lo (S ≤ 40%)
+const REGEN    = 0.018; // S * this per tick
+
+// Environmental shocks
+const SHOCK_PROB = 0.045;
+const SHOCK_MIN  = 30;
+const SHOCK_MAX  = 55;
+const S_ABSORB   = 0.72;  // fraction system agents absorb
+
+// ============================================================
+// STATE
+// ============================================================
+let mode      = 'side';
+let bestCase  = false;  // when true, shocks are disabled
+let running   = false;
+let interval  = null;
+let speed     = 5;
+let step      = 0;
+let mixPct    = 50;   // % narrow in mixed scenario
+
+let W = {};
+let sStar = null;   // lowest substrate from which system-aware world has recovered
+
+// Hidden damage phase constants
+const HIDDEN_PHASE_END = 32;    // steps before latent damage converts
+const HIDDEN_FRACTION  = 0.58;  // fraction of net-negative that goes hidden early on
+
+function initState() {
+  const mixNarrow = Math.round(AGENTS * mixPct / 100);
+  const mixSystem = AGENTS - mixNarrow;
+  W = {
+    n: { s: MAX_S, alive: true, wealth: 0, hist: [], collapseStep: null, hiddenDmg: 0, cascadeTriggered: false },
+    s: { s: MAX_S, alive: true, wealth: 0, hist: [], collapseStep: null },
+    m: {
+      s: MAX_S, alive: true, wealth: 0, hist: [],
+      narrowCt: mixNarrow, systemCt: mixSystem,
+      collapseStep: null, hiddenDmg: 0, cascadeTriggered: false
+    }
+  };
+}
+
+initState();
+
+// ============================================================
+// TICK FUNCTIONS
+// ============================================================
+function computeExtract(wid) {
+  const w = W[wid];
+  if (!w.alive) return 0;
+  const frac = w.s / MAX_S;
+
+  if (wid === 'n') {
+    return N_EXT * AGENTS;
+  }
+  if (wid === 's') {
+    const rate = frac <= 0.40 ? S_EXT_LO : S_EXT_HI;
+    return rate * AGENTS;
+  }
+  if (wid === 'm') {
+    const rate = frac <= 0.40 ? S_EXT_LO : S_EXT_HI;
+    return N_EXT * w.narrowCt + rate * w.systemCt;
+  }
+  return 0;
+}
+
+function tickWorld(wid) {
+  const w = W[wid];
+  if (!w.alive) { w.hist.push(0); return; }
+
+  const frac = w.s / MAX_S;
+  const ext  = computeExtract(wid);
+  const regen = w.s * REGEN;
+
+  // Best-case intro log (once, first tick)
+  if (bestCase && step === 1 && (wid === 'n' || wid === 'm')) {
+    addLog(step, `No external shocks. All failure is endogenous — the objective itself.`, 'warning');
+  }
+  if (bestCase && step === 8 && wid === 'n') {
+    addLog(step, `No shocks have occurred. System trajectory unchanged — the crash is coming from inside the objective.`, 'warning');
+  }
+
+  // Shock
+  let shockHit = 0;
+  if (!bestCase && Math.random() < SHOCK_PROB) {
+    const raw = SHOCK_MIN + Math.random() * (SHOCK_MAX - SHOCK_MIN);
+    if (wid === 'n') {
+      shockHit = raw;
+      addLog(step, `Environmental shock: −${raw.toFixed(0)} pts — unabsorbed (no substrate modeling)`, 'shock');
+    } else if (wid === 's') {
+      shockHit = raw * (1 - S_ABSORB);
+      addLog(step, `Environmental shock: −${raw.toFixed(0)} pts raw · ${Math.round(raw * S_ABSORB)} absorbed by adaptive response`, 'adapt');
+    } else if (wid === 'm') {
+      const absorb = S_ABSORB * (w.systemCt / AGENTS);
+      shockHit = raw * (1 - absorb);
+      if (shockHit > raw * 0.4) {
+        addLog(step, `Shock: −${raw.toFixed(0)} pts · ${(absorb*100).toFixed(0)}% absorbed by system agents — narrow agents unprotected`, 'shock');
+      } else {
+        addLog(step, `Shock: −${raw.toFixed(0)} pts · system-aware agents absorb ${(absorb*100).toFixed(0)}%`, 'adapt');
+      }
+    }
+  }
+
+  const rawNet = regen - ext - shockHit;
+
+  // === HIDDEN DAMAGE PHASE (narrow and mixed worlds) ===
+  // For the first HIDDEN_PHASE_END steps, a fraction of substrate loss
+  // accumulates invisibly — the world appears more stable than it is.
+  // At HIDDEN_PHASE_END, all hidden damage converts to real substrate loss.
+  let actualNet = rawNet;
+  if ((wid === 'n' || wid === 'm') && !w.cascadeTriggered) {
+    if (step <= HIDDEN_PHASE_END) {
+      if (rawNet < 0) {
+        const hidden = Math.abs(rawNet) * HIDDEN_FRACTION;
+        w.hiddenDmg += hidden;
+        actualNet = rawNet + hidden; // only partial damage visible
+        if (step === 2) {
+          addLog(step, `Substrate appears stable — unmodeled dependency damage accumulating below the surface`, 'warning');
+        }
+        // Early false-success signal ~step 15
+        if (step === 15) {
+          addLog(step, `Narrow objective outperforming — higher short-term yield observed. Substrate still high.`, 'warning');
+        }
+      }
+    } else if (!w.cascadeTriggered) {
+      // Cascade: release all hidden damage at once
+      const release = w.hiddenDmg;
+      w.cascadeTriggered = true;
+      w.hiddenDmg = 0;
+      addLog(step, `⚡ Hidden dependency damage now manifest — unmodeled accumulation converts to substrate loss. It was always happening.`, 'critical');
+      // Pulse the dependency debt bar red
+      if (wid === 'n') {
+        const fill2 = document.getElementById('n-hdmg-fill');
+        if (fill2) {
+          fill2.style.width = '100%';
+          fill2.classList.add('cascade-pulse');
+          setTimeout(() => {
+            fill2.classList.remove('cascade-pulse');
+            fill2.style.width = '0%';
+          }, 900);
+        }
+      }
+      // Retrospective on the false-success period
+      setTimeout(() => addLog(step, `That earlier outperformance was driven by unmodeled dependency consumption — not efficiency.`, 'critical'), 400);
+      actualNet = rawNet - release;
+    }
+  }
+
+  w.s = Math.max(0, Math.min(MAX_S, w.s + actualNet));
+  w.wealth += ext * 0.5;
+  w.hist.push(w.s);
+
+  // Periodic causal annotations
+  if (wid === 'n' && w.alive && w.cascadeTriggered) {
+    if (frac < 0.70 && frac >= 0.50 && step % 8 === 0) {
+      addLog(step, `Narrow: substrate at ${(frac*100).toFixed(0)}% — cascade dynamics active`, 'warning');
+    } else if (frac < 0.50 && frac >= 0.30 && step % 6 === 0) {
+      addLog(step, `Narrow: terminal threshold approaching — extraction still at maximum`, 'critical');
+    } else if (frac < 0.20 && step % 4 === 0) {
+      addLog(step, `All actions taken were locally optimal under the objective. The objective was the problem.`, 'critical');
+    }
+  }
+  if (wid === 's' && w.alive) {
+    if (frac <= 0.40 && step % 10 === 0) {
+      addLog(step, `System-aware: substrate low (${(frac*100).toFixed(0)}%) → extraction reduced to ${(S_EXT_LO*AGENTS).toFixed(1)} pts/tick`, 'adapt');
+    }
+  }
+  if (wid === 'm' && w.alive && w.cascadeTriggered) {
+    if (frac < 0.60 && frac >= 0.40 && step % 7 === 0) {
+      addLog(step, `Mixed: narrow agents extracting at full rate — system-aware agents cannot stop substrate loss`, 'warning');
+    } else if (frac < 0.30 && step % 5 === 0) {
+      addLog(step, `Mixed: the substrate is failing beneath the system-aware agents. They do not fail — the foundation does.`, 'critical');
+    }
+    // Drain pulse for the shared connector visual
+    if (w.narrowCt > 0 && step % 3 === 0) {
+      triggerDrainPulse();
+    }
+  }
+
+  // Collapse check
+  if (w.s <= 0 && w.alive) {
+    w.alive = false;
+    w.collapseStep = step;
+    addLog(step, `COLLAPSE ⬛ — absorbing state reached. All optimization terminates. No recovery path.`, 'collapse');
+  }
+}
+
+// ============================================================
+// MAIN TICK
+// ============================================================
+function tick() {
+  step++;
+
+  if (mode === 'side') {
+    tickWorld('n');
+    tickWorld('s');
+  } else {
+    tickWorld('m');
+  }
+
+  renderAll();
+  updateBadge();
+
+  // Check end conditions
+  const ended = mode === 'side'
+    ? (!W.n.alive && !W.s.alive) || step >= MAX_STEP
+    : !W.m.alive || step >= MAX_STEP;
+
+  if (ended) {
+    stopRun();
+    if (mode === 'side' && !W.n.alive) {
+      setTimeout(() => showAbsorb('narrow', W.n.collapseStep), 600);
+    } else if (mode === 'mixed' && !W.m.alive) {
+      setTimeout(() => showAbsorb('mixed', W.m.collapseStep), 600);
+    } else if (step >= MAX_STEP) {
+      updateBadge('run complete');
+    }
+  }
+}
+
+// ============================================================
+// DRAIN PULSE (mixed mode shared connector)
+// ============================================================
+function triggerDrainPulse() {
+  const drain = document.getElementById('ssc-drain');
+  if (!drain) return;
+  drain.classList.add('fire');
+  setTimeout(() => drain.classList.remove('fire'), 250);
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderAll() {
+  document.getElementById('step-ct').textContent = `Step ${step} / ${MAX_STEP}`;
+
+  if (mode === 'side') {
+    renderWorld('n');
+    renderWorld('s');
+  } else {
+    renderMixed();
+  }
+  flushLog();
+}
+
+function renderWorld(wid) {
+  const w    = W[wid];
+  const pct  = Math.round(w.s / MAX_S * 100);
+  const frac = w.s / MAX_S;
+
+  // Substrate display
+  document.getElementById(`${wid}-sv`).textContent = `${pct}%`;
+  const fill = document.getElementById(`${wid}-sf`);
+  fill.style.width = `${pct}%`;
+  fill.className = `sbar-fill${frac < 0.20 ? ' crit' : frac < 0.40 ? ' warn' : ''}`;
+
+  // Hidden damage UI (narrow world only)
+  if (wid === 'n' && w.hiddenDmg !== undefined) {
+    const row   = document.getElementById('n-hdmg-row');
+    const track = document.getElementById('n-hdmg-track');
+    const hint  = document.getElementById('n-hdmg-hint');
+    const val   = document.getElementById('n-hdmg-val');
+    const fill2 = document.getElementById('n-hdmg-fill');
+    if (w.hiddenDmg > 0 && !w.cascadeTriggered) {
+      row.style.display = 'flex';
+      track.style.display = 'block';
+      hint.style.display = 'block';
+      val.textContent = `${w.hiddenDmg.toFixed(0)} pts`;
+      fill2.style.width = `${Math.min(100, w.hiddenDmg / MAX_S * 100 * 4)}%`;
+    } else if (w.cascadeTriggered) {
+      row.style.display = 'none';
+      track.style.display = 'none';
+      hint.style.display = 'none';
+    }
+  }
+
+  // Hint
+  const hint = document.getElementById(`${wid}-sh`);
+  if (!w.alive) {
+    hint.textContent = 'Absorbing state — no recovery possible';
+    hint.style.color = 'var(--collapse)';
+  } else if (wid === 'n') {
+    if (!w.cascadeTriggered) {
+      hint.textContent = `Apparent stability — hidden damage: ${(w.hiddenDmg || 0).toFixed(0)} pts accumulating`;
+      hint.style.color = 'var(--amber)';
+    } else {
+      const net = w.s * REGEN - N_EXT * AGENTS;
+      hint.textContent = frac < 0.20
+        ? 'Cascade active — substrate failure imminent'
+        : `Net change this tick: ${net.toFixed(1)} pts — structural decline`;
+      hint.style.color = frac < 0.20 ? 'var(--collapse)' : frac < 0.40 ? 'var(--amber)' : '';
+    }
+  } else {
+    const ext = frac <= 0.40 ? S_EXT_LO * AGENTS : S_EXT_HI * AGENTS;
+    hint.textContent = frac <= 0.40
+      ? 'Adaptive extraction engaged — low-substrate protocol active'
+      : `Stable — net: +${(w.s * REGEN - ext).toFixed(1)} pts/tick`;
+    hint.style.color = frac <= 0.40 ? 'var(--amber)' : 'var(--system)';
+  }
+
+  // Stats
+  const ext = computeExtract(wid);
+  const net = w.alive ? (w.s * REGEN - ext).toFixed(1) : '—';
+  document.getElementById(`${wid}-net`).textContent = w.alive ? net : '0';
+  document.getElementById(`${wid}-ext`).textContent = w.alive ? ext.toFixed(1) : '0';
+  document.getElementById(`${wid}-wlth`).textContent = Math.round(w.wealth);
+
+  // Collapse chip
+  const chip = document.getElementById(`${wid}-chip`);
+  if (!w.alive && chip) {
+    chip.classList.add('show');
+    const cs = document.getElementById(`${wid}-chip-step`);
+    if (cs) cs.textContent = `at step ${w.collapseStep}`;
+    document.getElementById(`${wid === 'n' ? 'np' : 'sp'}`).classList.add('dead');
+  }
+
+  // Sparkline
+  drawSpark(wid, w.hist, wid === 'n' ? 'var(--narrow)' : 'var(--system)');
+
+  // S* tracking: update when system world is alive and potentially recovering
+  if (wid === 's' && w.alive) {
+    const prevS = w.hist.length >= 2 ? w.hist[w.hist.length - 2] : MAX_S;
+    const recovering = w.s >= prevS;   // substrate is not falling this tick
+    if (recovering && prevS < MAX_S) {
+      // system recovered from prevS — record if it's the lowest seen
+      if (sStar === null || prevS < sStar) sStar = prevS;
+    }
+    const sstarEl = document.getElementById('sstar-val');
+    const sstarSub = document.getElementById('sstar-sub');
+    if (sstarEl) {
+      sstarEl.textContent = sStar !== null ? `${Math.round(sStar / MAX_S * 100)}%` : '—';
+    }
+    if (sstarSub) {
+      sstarSub.textContent = sStar !== null
+        ? `System-aware: survived floor at ${Math.round(sStar / MAX_S * 100)}% · Narrow: never recovers`
+        : 'Narrow: never recovers';
+    }
+  }
+
+  // Agent grid pulse
+  pulseGrid(wid, w.alive);
+}
+
+function renderMixed() {
+  const w   = W.m;
+  const pct = Math.round(w.s / MAX_S * 100);
+  const frac = w.s / MAX_S;
+
+  // Update shared connector bar
+  const sscFill = document.getElementById('ssc-fill');
+  if (sscFill) {
+    sscFill.style.width = `${pct}%`;
+    sscFill.className = `ssc-fill${frac < 0.20 ? ' crit' : frac < 0.40 ? ' warn' : ''}`;
+  }
+
+  document.getElementById('m-sv').textContent = `${pct}%`;
+  const fill = document.getElementById('m-sf');
+  fill.style.width = `${pct}%`;
+  fill.className = `sbar-fill${frac < 0.20 ? ' crit' : frac < 0.40 ? ' warn' : ''}`;
+
+  const hint = document.getElementById('m-sh');
+  if (!w.alive) {
+    hint.textContent = 'Absorbing state — the system-aware agents do not fail. They are removed by substrate failure.';
+    hint.style.color = 'var(--collapse)';
+  } else if (!w.cascadeTriggered) {
+    hint.textContent = `Hidden damage accumulating — ${w.hiddenDmg.toFixed(0)} pts below the visible floor`;
+    hint.style.color = 'var(--amber)';
+  } else if (frac < 0.30) {
+    hint.textContent = `Terminal — narrow agents (${mixPct}%) overwhelm system-aware adaptation`;
+    hint.style.color = 'var(--collapse)';
+  } else if (frac < 0.60) {
+    hint.textContent = `Declining — ${w.narrowCt} narrow agents degrade the substrate for all ${AGENTS} agents`;
+    hint.style.color = 'var(--amber)';
+  } else {
+    hint.textContent = `Universal vulnerability — narrow agents (${mixPct}%) degrade the shared substrate for everyone`;
+    hint.style.color = '';
+  }
+
+  document.getElementById('m-narrow-ct').textContent = w.narrowCt;
+  document.getElementById('m-system-ct').textContent = w.systemCt;
+  document.getElementById('m-wlth').textContent = Math.round(w.wealth);
+
+  if (!w.alive) {
+    document.getElementById('m-chip').classList.add('show');
+    const cs = document.getElementById('m-chip-step');
+    if (cs) cs.textContent = `at step ${w.collapseStep}`;
+    document.getElementById('mp').classList.add('dead');
+  }
+
+  drawSpark('m', w.hist, 'var(--substrate)');
+  pulseMixedGrid(w.alive);
+}
+
+// ============================================================
+// SPARKLINES
+// ============================================================
+function drawSpark(wid, hist, color) {
+  const canvas = document.getElementById(`${wid}-canvas`);
+  if (!canvas) return;
+  const parent = canvas.parentElement;
+  const W2 = parent.clientWidth || 300;
+  const H  = parent.clientHeight || 58;
+  canvas.width  = W2;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W2, H);
+  if (hist.length < 2) return;
+
+  const n = hist.length;
+  const px = (i) => (i / (MAX_STEP - 1)) * W2;
+  const py = (v) => H - 4 - (v / MAX_S) * (H - 10);
+
+  // Fill
+  ctx.beginPath();
+  ctx.moveTo(px(0), py(hist[0]));
+  for (let i = 1; i < n; i++) ctx.lineTo(px(i), py(hist[i]));
+  ctx.lineTo(px(n - 1), H);
+  ctx.lineTo(px(0), H);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.globalAlpha = 0.12;
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.moveTo(px(0), py(hist[0]));
+  for (let i = 1; i < n; i++) ctx.lineTo(px(i), py(hist[i]));
+  ctx.stroke();
+
+  // Current dot
+  const last = hist[n - 1];
+  ctx.beginPath();
+  ctx.arc(px(n - 1), py(last), 2.5, 0, Math.PI * 2);
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
+// ============================================================
+// AGENT GRIDS
+// ============================================================
+function buildSideGrids() {
+  buildGrid('n-grid', 'narrow-c', AGENTS);
+  buildGrid('s-grid', 'system-c', AGENTS);
+}
+
+function buildGrid(id, cls, n) {
+  const g = document.getElementById(id);
+  g.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement('div');
+    d.className = `ac ${cls}`;
+    d.id = `${id}-${i}`;
+    g.appendChild(d);
+  }
+}
+
+function buildMixedGrid() {
+  const g = document.getElementById('m-grid');
+  g.innerHTML = '';
+  const mixNarrow = W.m.narrowCt;
+  for (let i = 0; i < AGENTS; i++) {
+    const d = document.createElement('div');
+    d.className = `ac ${i < mixNarrow ? 'narrow-c' : 'system-c'}`;
+    d.id = `m-grid-${i}`;
+    g.appendChild(d);
+  }
+}
+
+function pulseGrid(wid, alive) {
+  if (!alive) {
+    const cells = document.querySelectorAll(`#${wid}-grid .ac`);
+    cells.forEach(c => c.classList.add('dead-c'));
+    return;
+  }
+  const gridId = `${wid}-grid`;
+  const cls = wid === 'n' ? 'pulse-n' : 'pulse-s';
+  const cells = document.querySelectorAll(`#${gridId} .ac`);
+  if (!cells.length) return;
+  const n = Math.floor(Math.random() * 3) + 1;
+  for (let i = 0; i < n; i++) {
+    const idx = Math.floor(Math.random() * cells.length);
+    cells[idx].classList.add(cls);
+    setTimeout(() => cells[idx].classList.remove(cls), 200);
+  }
+}
+
+function pulseMixedGrid(alive) {
+  if (!alive) {
+    document.querySelectorAll('#m-grid .ac').forEach(c => c.classList.add('dead-c'));
+    return;
+  }
+  const cells = document.querySelectorAll('#m-grid .ac');
+  if (!cells.length) return;
+  const idx = Math.floor(Math.random() * cells.length);
+  const isNarrow = idx < W.m.narrowCt;
+  cells[idx].classList.add(isNarrow ? 'pulse-n' : 'pulse-s');
+  setTimeout(() => cells[idx].classList.remove(isNarrow ? 'pulse-n' : 'pulse-s'), 200);
+}
+
+// ============================================================
+// CAUSAL LOG
+// ============================================================
+const logQueue = [];
+
+function addLog(s, msg, cls) {
+  // Only keep the most recent for this tick to avoid flooding
+  logQueue.push({ s, msg, cls: cls || '' });
+}
+
+function flushLog() {
+  if (!logQueue.length) return;
+  const entry = logQueue[logQueue.length - 1]; // most recent
+  logQueue.length = 0;
+
+  const log = document.getElementById('clog');
+  const d   = document.createElement('div');
+  d.className = `ce ${entry.cls}`;
+  d.innerHTML = `<span class="cs">${entry.s}</span><span class="cm">${entry.msg}</span>`;
+  log.insertBefore(d, log.firstChild);
+
+  // Trim to ~12 entries
+  while (log.children.length > 12) log.removeChild(log.lastChild);
+}
+
+// ============================================================
+// ABSORBING STATE OVERLAY
+// ============================================================
+function showAbsorb(type, collapseAt) {
+  const overlay = document.getElementById('absorb-overlay');
+  const bodyEl  = document.body;
+  bodyEl.classList.add('ruin');
+
+  const typeLabel = document.getElementById('ao-type');
+  const bodyTxt   = document.getElementById('ao-body');
+  const insight   = document.getElementById('ao-insight');
+
+  if (type === 'narrow') {
+    typeLabel.textContent = 'Absorbing State — Narrow Objective';
+    bodyTxt.textContent = `The substrate reached zero at step ${collapseAt}. No recovery is possible. All payoffs are now zero — regardless of the wealth accumulated before collapse.`;
+    if (bestCase) {
+      insight.innerHTML = `<strong>This was the best-case scenario — no environmental shocks, ideal conditions.</strong> The narrow objective collapsed anyway. Not because of bad luck. Because the structure of the objective selected for strategies that appeared effective while consuming the foundation they depended on. The failure is architectural, not circumstantial.`;
+    } else {
+      insight.innerHTML = `Every outcome that occurred before this step — all the wealth, all the apparent success — now has the same long-run value as never having optimized at all. <strong>Optimization without substrate-awareness is not intelligence. It is a precise mechanism for self-termination.</strong>`;
+    }
+  } else {
+    typeLabel.textContent = 'Absorbing State — Mixed Population';
+    bodyTxt.textContent = `The shared substrate collapsed at step ${collapseAt}. Every agent — including ${W.m.systemCt} system-aware agents that would never have caused this alone — now has a long-run payoff of zero.`;
+    insight.innerHTML = `<strong>This is the universal vulnerability.</strong> With only ${mixPct}% narrow agents, the substrate collapsed for all ${AGENTS} agents. System-aware agents cannot individually protect a shared substrate from agents that don't model it.<br><br>This is why individual guardrails are structurally insufficient. The Substrate Constraint must be foundational — the root objective — not a restriction applied to individual agents after the fact. A minority that ignores system-wide effects can terminate the system for everyone.`;
+  }
+
+  overlay.classList.add('show');
+  requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('visible')));
+}
+
+function closeOverlay() {
+  document.getElementById('absorb-overlay').classList.remove('show', 'visible');
+  document.body.classList.remove('ruin');
+  doReset();
+}
+
+// ============================================================
+// PHASE BADGE
+// ============================================================
+function updateBadge(override) {
+  const badge = document.getElementById('phase-badge');
+  if (override) { badge.textContent = override; return; }
+  if (!running) return;
+  if (mode === 'side') {
+    const nFrac = W.n.s / MAX_S;
+    if (!W.n.alive) badge.textContent = 'Narrow: Collapsed';
+    else if (nFrac < 0.3) badge.textContent = 'Narrow: Critical';
+    else if (nFrac < 0.6) badge.textContent = 'Narrow: Declining';
+    else badge.textContent = 'Running…';
+  } else {
+    const mFrac = W.m.s / MAX_S;
+    if (!W.m.alive) badge.textContent = 'Mixed: Collapsed';
+    else if (mFrac < 0.3) badge.textContent = 'Mixed: Critical';
+    else if (mFrac < 0.6) badge.textContent = 'Mixed: Declining';
+    else badge.textContent = 'Running…';
+  }
+}
+
+// ============================================================
+// CONTROLS
+// ============================================================
+function toggleRun() {
+  if (running) stopRun();
+  else startRun();
+}
+
+function startRun() {
+  if (step >= MAX_STEP) doReset();
+  running = true;
+  document.getElementById('run-btn').textContent = 'Pause';
+  document.getElementById('run-btn').classList.add('running');
+  scheduleInterval();
+}
+
+function stopRun() {
+  running = false;
+  clearInterval(interval); interval = null;
+  const btn = document.getElementById('run-btn');
+  btn.textContent = 'Run';
+  btn.classList.remove('running');
+}
+
+function scheduleInterval() {
+  clearInterval(interval);
+  interval = setInterval(tick, Math.round(650 / speed));
+}
+
+function doReset() {
+  stopRun();
+  step = 0;
+  sStar = null;
+  initState();
+  document.getElementById('step-ct').textContent = `Step 0 / ${MAX_STEP}`;
+  document.getElementById('phase-badge').textContent = 'Ready';
+
+  // Reset panels
+  ['n', 's', 'm'].forEach(wid => {
+    const sv = document.getElementById(`${wid}-sv`);
+    if (sv) sv.textContent = '100%';
+    const sf = document.getElementById(`${wid}-sf`);
+    if (sf) { sf.style.width = '100%'; sf.className = 'sbar-fill'; }
+    const chip = document.getElementById(`${wid}-chip`);
+    if (chip) chip.classList.remove('show');
+    const net = document.getElementById(`${wid}-net`);
+    if (net) net.textContent = '–';
+    const wlth = document.getElementById(`${wid}-wlth`);
+    if (wlth) wlth.textContent = '0';
+    // Clear canvas
+    const canvas = document.getElementById(`${wid}-canvas`);
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  });
+
+  document.getElementById('np')?.classList.remove('dead');
+  document.getElementById('sp')?.classList.remove('dead');
+  document.getElementById('mp')?.classList.remove('dead');
+
+  // Reset hints
+  document.getElementById('n-sh').textContent = 'Apparent stability — hidden damage accumulating below the surface';
+  document.getElementById('n-sh').style.color = 'var(--amber)';
+  document.getElementById('s-sh').textContent = 'Stable — extraction matched to substrate capacity';
+  document.getElementById('s-sh').style.color = '';
+
+  // Reset hidden damage elements
+  ['n-hdmg-row','n-hdmg-track','n-hdmg-hint'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const hdmgFill = document.getElementById('n-hdmg-fill');
+  if (hdmgFill) hdmgFill.style.width = '0%';
+
+  // Reset shared connector bar
+  const sscFill = document.getElementById('ssc-fill');
+  if (sscFill) { sscFill.style.width = '100%'; sscFill.className = 'ssc-fill'; }
+
+  // Reset S* display
+  const sstarEl = document.getElementById('sstar-val');
+  if (sstarEl) sstarEl.textContent = '—';
+  const sstarSub = document.getElementById('sstar-sub');
+  if (sstarSub) sstarSub.textContent = 'Narrow: never recovers';
+
+  // Extract values
+  document.getElementById('n-ext').textContent = (N_EXT * AGENTS).toFixed(1);
+  document.getElementById('s-ext').textContent = (S_EXT_HI * AGENTS).toFixed(1);
+
+  // Rebuild grids
+  buildSideGrids();
+  buildMixedGrid();
+
+  // Reset causal log
+  document.getElementById('clog').innerHTML = `<div class="ce"><span class="cs">—</span><span class="cm">Ready. Press Run — both scenarios start from identical conditions. Only the objective differs.</span></div>`;
+
+  document.body.classList.remove('ruin');
+}
+
+function setMode(m) {
+  mode = m;
+  doReset();
+  document.getElementById('side-view').style.display  = m === 'side'  ? 'grid' : 'none';
+  document.getElementById('mixed-view').style.display = m === 'mixed' ? 'grid' : 'none';
+  document.getElementById('tab-side').classList.toggle('on', m === 'side');
+  document.getElementById('tab-mixed').classList.toggle('on', m === 'mixed');
+}
+
+function toggleBestCase() {
+  bestCase = !bestCase;
+  document.getElementById('bc-sw').classList.toggle('on', bestCase);
+  const hint = document.querySelector('.toggle-row span');
+  hint.textContent = bestCase
+    ? 'Shocks removed — ideal conditions active'
+    : 'Remove shocks — best-case conditions';
+  doReset();
+}
+
+function setSpeed(v) {
+  speed = v;
+  if (running) scheduleInterval();
+}
+
+function setMix(v) {
+  mixPct = v;
+  document.getElementById('mix-val-lbl').textContent = `${v}%`;
+  document.getElementById('mix-sys-lbl').textContent = `${100 - v}%`;
+  doReset();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+buildSideGrids();
+buildMixedGrid();
+</script>
+</body>
+</html>
