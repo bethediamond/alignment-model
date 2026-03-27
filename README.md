@@ -1,24 +1,99 @@
-The Alignment of Intelligence — Simulation
-A multi-agent simulation built as a companion to the article The Alignment of Intelligence.
-What this demonstrates
-The article argues that any objective ignoring system-wide effects will, as optimization scales, consume the foundation it depends on. This is a structural claim — a consequence of instrumental convergence in an interdependent environment, not a moral one.
-The simulation makes that dynamic visible. Two objective classes compete in a shared environment: agents optimizing locally (ignoring system-wide effects) and agents optimizing with awareness of system-wide dependencies. Run them separately, then run them together. Watch when and why the system fails.
-The simulation is not a proof. It is a demonstration of selection dynamics consistent with the structural argument. Readers are encouraged to vary the parameters and attempt to break the result.
-How to run it
-Open `alignment_toy_model_v2.html` in any modern browser. No installation, no dependencies.
-Or view it live: Run the simulation
-What to look for
-At low optimization pressure, both objective classes can coexist
-As pressure increases, locally-optimizing agents degrade the shared substrate
-Once substrate health drops below a threshold, all agents are affected — including those with system-aware objectives
-The failure mode is not caused by malice or error. It is produced by the optimization itself
-The argument it illustrates
-The simulation companion to this article is the second in the series: What does aligned intelligence actually converge toward? (link to be updated when Article 2 is published)
-That article asks what optimization moves toward once the constraint identified here is satisfied — and builds a more sophisticated simulation to test the answer.
-Part of a series
-This is the first simulation in a two-part series:
-This simulation — demonstrates why misaligned optimization is structurally self-terminating
-The Cost of Stability — demonstrates what aligned optimization converges toward
-Feedback and critique
-If you find a parameter regime where the simulation fails to show the expected dynamics, that is useful information — not a broken simulation. It tells you which assumptions are doing the work. The model notes in the simulation explain what it can and cannot claim.
-Critique, formalization attempts, and refutations of the underlying argument are genuinely invited. The article itself issues that challenge directly.
+# Toy 01 — Objective Class & Substrate Stability
+
+> *Part of **The Alignment of Intelligence** — a three-article series.*
+> **The article is forthcoming.** This toy is a companion to Article 1: *Constraint*.
+
+---
+
+## What This Is
+
+A live multi-agent simulation that makes one argument visible:
+
+> **The structure of an objective — not the capability of the agent — determines whether optimization is self-sustaining or self-terminating.**
+
+100 steps. 20 agents. Identical starting conditions. The only variable is whether each agent's objective models the shared environment it depends on. Watch what that single structural difference produces.
+
+---
+
+## The Simulation
+
+Three scenarios run from the same initial state:
+
+| Scenario | Objective Class | Behavior |
+|---|---|---|
+| **Narrow** | Substrate-blind | Maximizes local extraction; ignores system-wide effects |
+| **System-Aware** | Substrate-aware | Models and preserves the shared substrate |
+| **Mixed Population** | Both, sharing one substrate | Narrow and system-aware agents compete on the same life support |
+
+**Side-by-Side mode** shows the two objective classes diverging in real time — same agents, same environment, same shocks — until the structural difference resolves.
+
+**Mixed Population mode** shows the harder result: a minority of narrow agents is sufficient to collapse the substrate for everyone, including every system-aware agent that would never have caused this alone.
+
+---
+
+## Key Concepts
+
+**Shared Substrate** — The non-excludable resource all agents depend on. It regenerates slowly. It does not recover from zero.
+
+**Absorbing State** — The terminal condition. Once the substrate reaches zero, all payoffs become zero permanently — regardless of wealth accumulated before collapse. The system cannot exit this state.
+
+**Dependency Debt** — Hidden damage accumulating below the visible substrate floor. The narrow objective produces apparent stability while systematically building toward a failure it cannot detect.
+
+**S\*** — The minimum substrate level from which a system-aware objective can still recover. The narrow objective never reaches it.
+
+**Best-Case Mode** — Removes environmental shocks. The narrow objective still collapses. The failure is architectural, not circumstantial.
+
+---
+
+## Controls
+
+| Control | Function |
+|---|---|
+| **Side by Side / Mixed Population** | Switch between comparison and convergence scenarios |
+| **Run / Pause** | Start or pause the simulation |
+| **Reset** | Return to identical starting conditions |
+| **Remove shocks** | Toggle environmental shocks off — tests the best case |
+| **Speed slider** | Control simulation tick rate |
+| **Narrow agents %** *(Mixed mode)* | Set the proportion of narrow agents in the shared population |
+
+The **Causal Chain log** at the bottom traces each tick: objective → action → substrate effect → system state.
+
+---
+
+## The Argument
+
+This toy is the first of three. The trilogy is structured as:
+
+```
+Constraint  →  Attractor  →  Crossing
+   (1)            (2)           (3)
+```
+
+**Article 1 (this toy):** Eliminates invalid objectives. Any objective that ignores system-wide effects is structurally self-terminating — not under adversarial conditions, not eventually, but as the logical completion of the optimization.
+
+**Article 2:** Identifies the surviving region. What does optimization converge toward once self-defeating objectives have been removed?
+
+**Article 3:** Determines reachability. The control variable governing whether real systems arrive at the attractor before encountering the states Article 1 excludes.
+
+All three reduce to one constraint: whether capability outpaces the system's ability to model its own effects.
+
+---
+
+## Usage
+
+No build step. No dependencies. Open `toy_01.html` in any modern browser.
+
+```bash
+open toy_01.html
+# or just drag the file into a browser tab
+```
+
+---
+
+## Coming Soon
+
+The full article — *The Alignment of Intelligence, Article 1: Constraint* — is not yet published. This repository will be updated with a link when it goes live.
+
+---
+
+*"A system that optimizes without modeling its dependencies selects for strategies that appear effective until they irreversibly fail. The failure is not an accident. It is the logical completion of the objective."*
