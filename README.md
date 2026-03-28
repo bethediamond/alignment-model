@@ -90,9 +90,9 @@ open toy_01.html
 
 ---
 
-## Article (Coming Soon)
+## Article
 
-The full article — *The Alignment of Intelligence, Article 1: Constraint* — is not yet published. This repository will be updated with a link when it goes live.
+[The Alignment of Intelligence, Article 1: Constraint](https://medium.com/@diamondlight/i-alignment-as-structural-necessity-07e38568754f)
 
 ---
 
