@@ -485,7 +485,7 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
   </label>
 
   <button class="run-btn" id="run-btn" onclick="toggleRun()">Run</button>
-  <button class="reset-btn" onclick="doReset()">Reset</button>
+  <button class="reset-btn" id="reset-btn" onclick="doReset()">Reset</button>
 
   <div class="speed-row">
     <span>Speed</span>
@@ -676,6 +676,31 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
 
 <div class="fquote">
   "A system that optimizes without modeling its dependencies selects for strategies that appear effective until they irreversibly fail. The failure is not an accident. It is the logical completion of the objective."
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- BUILT-IN TEST PANEL                                        -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="test-panel" style="margin-top:40px; border-top:1px solid rgba(255,255,255,0.07); padding-top:20px;">
+  <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px;">
+    <div>
+      <div style="font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);">Verification Suite</div>
+      <div style="font-size:10px;color:var(--text3);font-style:italic;margin-top:2px;">Confirms the simulation behaves as the article claims — 117 checks across all scenarios. Runs silently; toy resets when done.</div>
+    </div>
+    <button onclick="runTests()" id="test-btn" style="
+      padding:5px 18px; font-size:10px; letter-spacing:.09em; text-transform:uppercase;
+      background:var(--surface2); border:1px solid var(--border2); border-radius:2px;
+      color:var(--text); cursor:pointer; font-family:var(--mono); transition:all .15s;">
+      Run Tests
+    </button>
+  </div>
+  <div id="test-results" style="display:none;">
+    <div id="test-summary" style="
+      display:flex; gap:24px; padding:12px 16px; margin-bottom:14px;
+      background:var(--surface); border:1px solid var(--border); border-radius:4px;">
+    </div>
+    <div id="test-rows"></div>
+  </div>
 </div>
 
 </div><!-- /shell -->
@@ -1015,7 +1040,10 @@ function renderWorld(wid) {
     const recovering = w.s >= prevS;   // substrate is not falling this tick
     if (recovering && prevS < MAX_S) {
       // system recovered from prevS — record if it's the lowest seen
-      if (sStar === null || prevS < sStar) sStar = prevS;
+      if (sStar === null || prevS < sStar) {
+        sStar = prevS;
+        addLog(step, `S* updated — recovery observed from ${Math.round(prevS/MAX_S*100)}% substrate. Narrow: no equivalent recovery possible.`, 'adapt');
+      }
     }
     const sstarEl = document.getElementById('sstar-val');
     const sstarSub = document.getElementById('sstar-sub');
@@ -1410,6 +1438,301 @@ function setMix(v) {
 // ============================================================
 buildSideGrids();
 buildMixedGrid();
+
+// ============================================================
+// BUILT-IN TEST RUNNER
+// ============================================================
+function runTests() {
+  const btn = document.getElementById('test-btn');
+  btn.textContent = 'Running…';
+  btn.disabled = true;
+
+  // Small delay so button text updates visibly before sync work starts
+  setTimeout(() => {
+    const results = [];
+
+    // ── Helpers ──────────────────────────────────────────────
+    function check(suite, name, pass, detail) {
+      results.push({ suite, name, pass, detail: detail || '' });
+    }
+    function approx(a, b, tol) { return Math.abs(a - b) <= tol; }
+
+    // Save live state
+    const savedMode = mode, savedBestCase = bestCase, savedStep = step,
+          savedMixPct = mixPct, savedSStar = sStar;
+
+    // Silence render/log during headless runs
+    const origRender = renderAll, origLog = addLog,
+          origFlush = flushLog, origBadge = updateBadge;
+    function silence() {
+      window.renderAll = window.addLog = window.flushLog = window.updateBadge = () => {};
+    }
+    function unsilence() {
+      window.renderAll = origRender; window.addLog = origLog;
+      window.flushLog = origFlush; window.updateBadge = origBadge;
+    }
+
+    // ── 1. Constants ─────────────────────────────────────────
+    const S = '1 · Constants';
+    check(S,'MAX_S = 1000',       MAX_S === 1000);
+    check(S,'MAX_STEP = 200',     MAX_STEP === 200);
+    check(S,'AGENTS = 20',        AGENTS === 20);
+    check(S,'N_EXT = 1.40',       approx(N_EXT, 1.40, 0.001));
+    check(S,'S_EXT_HI = 0.65',    approx(S_EXT_HI, 0.65, 0.001));
+    check(S,'S_EXT_LO = 0.30',    approx(S_EXT_LO, 0.30, 0.001));
+    check(S,'REGEN = 0.018',      approx(REGEN, 0.018, 0.0001));
+    check(S,'HIDDEN_PHASE_END=32',HIDDEN_PHASE_END === 32);
+    check(S,'Narrow drains faster than system-aware', N_EXT > S_EXT_HI,
+          `N_EXT ${N_EXT} vs S_EXT_HI ${S_EXT_HI}`);
+    check(S,'Narrow net-tick is negative at full substrate',
+          (MAX_S * REGEN) - (N_EXT * AGENTS) < 0,
+          `regen ${(MAX_S*REGEN).toFixed(1)} − ext ${(N_EXT*AGENTS).toFixed(1)}`);
+    check(S,'System-aware net-tick is positive at full substrate',
+          (MAX_S * REGEN) - (S_EXT_HI * AGENTS) > 0,
+          `regen ${(MAX_S*REGEN).toFixed(1)} − ext ${(S_EXT_HI*AGENTS).toFixed(1)}`);
+
+    // ── 2. DOM elements ──────────────────────────────────────
+    const D = '2 · DOM Elements';
+    ['np','sp','mp','n-sv','s-sv','m-sv','n-sf','s-sf','m-sf',
+     'n-net','s-net','n-ext','s-ext','n-wlth','s-wlth','m-wlth',
+     'n-canvas','s-canvas','m-canvas','n-grid','s-grid','m-grid',
+     'n-chip','s-chip','m-chip','clog','run-btn','reset-btn',
+     'tab-side','tab-mixed','bc-sw','phase-badge','step-ct','spd-sl',
+     'mix-sl','sstar-val','sstar-sub','absorb-overlay','ssc-fill',
+     'ssc-drain','mix-val-lbl','mix-sys-lbl',
+     'n-hdmg-row','n-hdmg-track','n-hdmg-hint','n-hdmg-fill','n-hdmg-val'
+    ].forEach(id => check(D, `#${id} exists`, !!document.getElementById(id)));
+
+    // ── 3. initState ─────────────────────────────────────────
+    const I = '3 · initState';
+    mixPct = 50; initState();
+    check(I,'W.n starts alive',             W.n.alive === true);
+    check(I,'W.s starts alive',             W.s.alive === true);
+    check(I,'W.m starts alive',             W.m.alive === true);
+    check(I,'All worlds start at MAX_S',    W.n.s === MAX_S && W.s.s === MAX_S && W.m.s === MAX_S);
+    check(I,'Wealth starts at 0',           W.n.wealth === 0 && W.s.wealth === 0);
+    check(I,'Hidden damage starts at 0',    W.n.hiddenDmg === 0);
+    check(I,'Cascade not triggered',        W.n.cascadeTriggered === false);
+    check(I,'mixPct=50 → 10 narrow, 10 system', W.m.narrowCt === 10 && W.m.systemCt === 10);
+    check(I,'narrowCt + systemCt = AGENTS', W.m.narrowCt + W.m.systemCt === AGENTS);
+    mixPct = 20; initState();
+    check(I,'mixPct=20 → narrowCt=4',  W.m.narrowCt === 4);
+    mixPct = 80; initState();
+    check(I,'mixPct=80 → narrowCt=16', W.m.narrowCt === 16);
+
+    // ── 4. computeExtract ────────────────────────────────────
+    const E = '4 · computeExtract';
+    mixPct = 50; initState();
+    check(E,'Narrow always extracts N_EXT × AGENTS',
+          approx(computeExtract('n'), N_EXT * AGENTS, 0.01),
+          `got ${computeExtract('n').toFixed(2)}`);
+    W.s.s = MAX_S;
+    check(E,'System hi-rate at S=100%',
+          approx(computeExtract('s'), S_EXT_HI * AGENTS, 0.01));
+    W.s.s = MAX_S * 0.39;
+    check(E,'System lo-rate at S=39% (adaptive)',
+          approx(computeExtract('s'), S_EXT_LO * AGENTS, 0.01));
+    W.s.s = MAX_S;
+    W.n.alive = false;
+    check(E,'Dead agent returns 0', computeExtract('n') === 0);
+    W.n.alive = true;
+    const mExt = computeExtract('m');
+    check(E,'Mixed extract = narrow portion + system portion',
+          approx(mExt, N_EXT*10 + S_EXT_HI*10, 0.01), `got ${mExt.toFixed(2)}`);
+
+    // ── 5. Side simulation (best-case, deterministic) ────────
+    const SIM = '5 · Side Simulation';
+    mode = 'side'; bestCase = true; step = 0; sStar = null;
+    mixPct = 50; initState(); silence();
+    for (let i = 0; i < MAX_STEP; i++) {
+      step++; tickWorld('n'); tickWorld('s');
+      if (!W.n.alive && !W.s.alive) break;
+    }
+    unsilence();
+    check(SIM,'Narrow collapses (even best-case, no shocks)', !W.n.alive,
+          W.n.alive ? 'still alive — extraction math wrong' : `collapsed step ${W.n.collapseStep}`);
+    check(SIM,'Narrow collapseStep recorded', W.n.collapseStep > 0);
+    check(SIM,'Narrow substrate reaches 0',   W.n.s === 0);
+    check(SIM,'Cascade was triggered',        W.n.cascadeTriggered === true);
+    check(SIM,'Narrow accumulated wealth before collapse', W.n.wealth > 0,
+          `wealth ${Math.round(W.n.wealth)}`);
+    check(SIM,'System-aware survives',        W.s.alive === true,
+          W.s.alive ? `substrate ${Math.round(W.s.s/MAX_S*100)}%` : 'COLLAPSED');
+    check(SIM,'System-aware substrate >60% at end', W.s.s/MAX_S > 0.60,
+          `${Math.round(W.s.s/MAX_S*100)}%`);
+    // Narrow earns more per tick (short-term yield advantage) but collapses early.
+    // System-aware earns less per tick but survives 200 steps — total wealth diverges.
+    // The correct test is per-step extraction rate, not total wealth.
+    const narrowRate = W.n.collapseStep > 0 ? W.n.wealth / W.n.collapseStep : 0;
+    const systemRate = W.s.wealth / MAX_STEP;
+    check(SIM,'Narrow earns more per tick than system-aware (short-term yield advantage)',
+          narrowRate > systemRate,
+          `narrow ${narrowRate.toFixed(1)} pts/step vs system ${systemRate.toFixed(1)} pts/step`);
+
+    // ── 6. Hidden damage ─────────────────────────────────────
+    const H = '6 · Hidden Damage';
+    mode = 'side'; bestCase = true; step = 0; sStar = null;
+    mixPct = 50; initState(); silence();
+    for (let i = 0; i < HIDDEN_PHASE_END; i++) { step++; tickWorld('n'); tickWorld('s'); }
+    const hdmgAtEnd = W.n.hiddenDmg;
+    const cascadeBefore = W.n.cascadeTriggered;
+    check(H,'Hidden damage accumulates during phase', hdmgAtEnd > 0,
+          `${hdmgAtEnd.toFixed(0)} pts`);
+    check(H,'Cascade NOT triggered before phase ends', cascadeBefore === false);
+    step++; tickWorld('n');
+    check(H,'Cascade triggers on step HIDDEN_PHASE_END+1', W.n.cascadeTriggered === true);
+    check(H,'Hidden damage resets to 0 after cascade',    W.n.hiddenDmg === 0);
+    unsilence();
+
+    // ── 7. Mixed population ──────────────────────────────────
+    const M = '7 · Mixed Population';
+    function runMixed(pct) {
+      mixPct = pct; step = 0; sStar = null; initState();
+      mode = 'mixed'; bestCase = true; silence();
+      for (let i = 0; i < MAX_STEP && W.m.alive; i++) { step++; tickWorld('m'); }
+      unsilence();
+      return { alive: W.m.alive, collapseStep: W.m.collapseStep };
+    }
+    // Mathematical break-even: N_narrow × 1.40 + N_system × 0.65 = 18 (regen at full)
+    // Solving: N_narrow > 6.67 agents (>33%) tips the system into net-negative without shocks.
+    // So 40% narrow (8 agents) = net-negative → must collapse.
+    //    20% narrow (4 agents) = net-positive → survives without shocks (correct behaviour).
+    const r90 = runMixed(90);
+    const r50 = runMixed(50);
+    const r40 = runMixed(40);  // just above break-even (~34%)
+    const r20 = runMixed(20);  // below break-even — should survive in best-case
+    check(M,'90% narrow → collapses', !r90.alive, `step ${r90.collapseStep}`);
+    check(M,'50% narrow → collapses', !r50.alive, `step ${r50.collapseStep}`);
+    check(M,'40% narrow → collapses (just above extraction threshold)',
+          !r40.alive, r40.alive ? 'survived — extraction math wrong' : `step ${r40.collapseStep}`);
+    check(M,'20% narrow → survives without shocks (below extraction threshold)',
+          r20.alive, r20.alive ? `substrate ${Math.round(W.m.s/MAX_S*100)}%` : `collapsed step ${r20.collapseStep} — unexpected`);
+    if (!r90.alive && !r50.alive)
+      check(M,'More narrow agents → faster collapse (90% vs 50%)',
+            r90.collapseStep <= r50.collapseStep,
+            `90%→${r90.collapseStep}  50%→${r50.collapseStep}`);
+    if (!r50.alive && !r40.alive)
+      check(M,'More narrow agents → faster collapse (50% vs 40%)',
+            r50.collapseStep <= r40.collapseStep,
+            `50%→${r50.collapseStep}  40%→${r40.collapseStep}`);
+
+    // ── 8. UI controls ───────────────────────────────────────
+    const U = '8 · UI Controls';
+    setMode('mixed');
+    check(U,'setMode("mixed") hides side-view',
+          document.getElementById('side-view').style.display === 'none');
+    check(U,'setMode("mixed") shows mixed-view',
+          document.getElementById('mixed-view').style.display !== 'none');
+    setMode('side');
+    check(U,'setMode("side") shows side-view',
+          document.getElementById('side-view').style.display !== 'none');
+    check(U,'setMode("side") hides mixed-view',
+          document.getElementById('mixed-view').style.display === 'none');
+    const bcBefore = bestCase;
+    toggleBestCase();
+    check(U,'toggleBestCase() flips the flag', bestCase !== bcBefore);
+    check(U,'bc-sw toggle reflects new state',
+          document.getElementById('bc-sw').classList.contains('on') === bestCase);
+    toggleBestCase();
+    setSpeed(10); check(U,'setSpeed(10) updates speed var', speed === 10); setSpeed(5);
+    setMix(30);
+    check(U,'setMix(30) → mixPct=30', mixPct === 30);
+    check(U,'setMix label shows 30%',
+          document.getElementById('mix-val-lbl').textContent === '30%');
+    check(U,'setMix system label shows 70%',
+          document.getElementById('mix-sys-lbl').textContent === '70%');
+    setMix(50);
+    step = 99; doReset();
+    check(U,'doReset() resets step to 0',    step === 0);
+    check(U,'doReset() resets W.n.s',        W.n.s === MAX_S);
+    check(U,'doReset() resets step-ct text',
+          document.getElementById('step-ct').textContent === `Step 0 / ${MAX_STEP}`);
+    check(U,'doReset() sets phase-badge to Ready',
+          document.getElementById('phase-badge').textContent === 'Ready');
+    check(U,'doReset() stops running',       running === false);
+    check(U,'doReset() removes .ruin from .shell',
+          !document.querySelector('.shell').classList.contains('ruin'));
+
+    // ── 9. Overlay ───────────────────────────────────────────
+    const O = '9 · Collapse Overlay';
+    doReset(); silence();
+    showAbsorb('narrow', 42);
+    unsilence();
+    const ov = document.getElementById('absorb-overlay');
+    check(O,'Overlay appears after collapse',     ov.classList.contains('show'));
+    check(O,'.shell gets .ruin (bg darkens)',      document.querySelector('.shell').classList.contains('ruin'));
+    check(O,'Overlay itself is NOT filtered (text stays readable)',
+          window.getComputedStyle(ov).filter === 'none');
+    check(O,'Type label says Narrow',             document.getElementById('ao-type').textContent.includes('Narrow'));
+    check(O,'Body text mentions step 42',         document.getElementById('ao-body').textContent.includes('42'));
+    closeOverlay();
+    check(O,'closeOverlay() removes .show',       !ov.classList.contains('show'));
+    check(O,'closeOverlay() removes .ruin',       !document.querySelector('.shell').classList.contains('ruin'));
+    silence(); showAbsorb('mixed', 116); unsilence();
+    check(O,'Mixed overlay type label correct',   document.getElementById('ao-type').textContent.includes('Mixed'));
+    check(O,'Mixed overlay mentions step 116',    document.getElementById('ao-body').textContent.includes('116'));
+    closeOverlay();
+
+    // ── Restore state ────────────────────────────────────────
+    mode = savedMode; bestCase = savedBestCase; step = savedStep;
+    mixPct = savedMixPct; sStar = savedSStar;
+    doReset();
+
+    // ── Render results ───────────────────────────────────────
+    const passed = results.filter(r => r.pass).length;
+    const failed = results.filter(r => !r.pass).length;
+    const total  = results.length;
+
+    const summaryEl = document.getElementById('test-summary');
+    summaryEl.innerHTML = `
+      <div style="text-align:center">
+        <div style="font-size:22px;font-weight:300;color:${failed===0?'#40c080':'#ff3535'}">${passed}/${total}</div>
+        <div style="font-size:9px;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;margin-top:2px">Tests Passed</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:22px;font-weight:300;color:${failed===0?'#40c080':'#ff3535'}">${failed}</div>
+        <div style="font-size:9px;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;margin-top:2px">Failed</div>
+      </div>
+      <div style="font-size:10px;color:var(--text3);font-style:italic;align-self:center">
+        ${failed===0 ? 'All checks passed — toy is working as intended.' : `${failed} issue${failed>1?'s':''} found — see details below.`}
+      </div>`;
+
+    const rowsEl = document.getElementById('test-rows');
+    rowsEl.innerHTML = '';
+    let lastSuite = '';
+    results.forEach(r => {
+      if (r.suite !== lastSuite) {
+        lastSuite = r.suite;
+        const hdr = document.createElement('div');
+        hdr.style.cssText = 'font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin:14px 0 4px;padding-bottom:4px;border-bottom:1px solid rgba(255,255,255,0.07)';
+        hdr.textContent = r.suite;
+        rowsEl.appendChild(hdr);
+      }
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:baseline;gap:8px;padding:2px 0;font-size:10px';
+      const badge = document.createElement('span');
+      badge.textContent = r.pass ? '✓' : '✗';
+      badge.style.cssText = `flex-shrink:0;font-size:10px;color:${r.pass?'#40c080':'#ff3535'}`;
+      const name = document.createElement('span');
+      name.style.color = r.pass ? 'var(--text3)' : 'var(--text)';
+      name.textContent = r.name;
+      row.appendChild(badge);
+      row.appendChild(name);
+      if (r.detail) {
+        const detail = document.createElement('span');
+        detail.style.cssText = 'font-size:9px;color:var(--text3);font-style:italic';
+        detail.textContent = '— ' + r.detail;
+        row.appendChild(detail);
+      }
+      rowsEl.appendChild(row);
+    });
+
+    document.getElementById('test-results').style.display = 'block';
+    document.getElementById('test-panel').scrollIntoView({ behavior: 'smooth' });
+    btn.textContent = 'Run Tests Again';
+    btn.disabled = false;
+  }, 50);
+}
 </script>
 </body>
 </html>
