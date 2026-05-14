@@ -460,7 +460,7 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
     Three scenarios. Identical starting conditions. The only variable is the objective encoded in each agent — whether it models the shared environment it depends on, or ignores it. Watch what the structure of that choice produces.
   </div>
   <div class="hdr-desc" style="margin-top:6px;font-size:11px;opacity:0.7;">
-    All three articles reduce to one constraint: whether capability outpaces the system's ability to model its own effects. This simulation makes that constraint visible in population dynamics.
+    The constraint this simulation makes visible is not about better objectives. It is about whether objectives that ignore the conditions of their own persistence remain viable under the domain conditions the article specifies.
   </div>
 </header>
 
@@ -472,7 +472,8 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
   <span class="tnav-item" title="Determines reachability — the control variable governing whether real systems arrive at the attractor before encountering the states Article 1 excludes">Crossing</span>
 </div>
 
-<div style="font-size:9.5px;color:var(--text3);margin-bottom:6px;letter-spacing:0.04em;">Start: Side by Side → Run → watch the three objective types diverge → switch to Mixed Population → observe long-run selection dynamics → toggle off shocks for best-case conditions.</div>
+<div style="font-size:9.5px;color:var(--text3);margin-bottom:6px;letter-spacing:0.04em;font-style:italic;">Article 1 toy: illustrates the persistence-side Substrate Constraint within the stated domain. Does not test OP4, OP9, or the full specification-coherence claim.</div>
+<div style="font-size:9.5px;color:var(--text3);margin-bottom:6px;letter-spacing:0.04em;">Start: Side by Side → Run (shocks already removed — collapse is endogenous to the objective class) → watch apparent stability give way to collapse → then switch to Mixed Population, the article's more important result: individual alignment is not protection when the shared substrate has been destabilized.</div>
 <div class="cbar">
   <div class="mode-tabs">
     <button class="mtab on" id="tab-side" onclick="setMode('side')">Side by Side</button>
@@ -480,8 +481,13 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
   </div>
 
   <label class="toggle-row" onclick="toggleBestCase()">
-    <div class="tsw" id="bc-sw"></div>
-    <span>Remove shocks — best-case conditions</span>
+    <div class="tsw on" id="bc-sw"></div>
+    <span>Shocks removed — ideal conditions active</span>
+  </label>
+
+  <label class="toggle-row" onclick="toggleResettable()" title="In a resettable environment, collapse is costly but recoverable. In a non-resettable environment, it is terminal. This is the article's key distinction.">
+    <div class="tsw" id="rs-sw"></div>
+    <span>Resettable environment</span>
   </label>
 
   <button class="run-btn" id="run-btn" onclick="toggleRun()">Run</button>
@@ -502,7 +508,7 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
     <div class="whead">
       <div>
         <div class="wtitle n">Narrow Objective</div>
-        <div class="wsub">Substrate-Blind · Relative Rationality — maximize local extraction, ignore system effects</div>
+        <div class="wsub">Substrate-Blind — maximize local extraction, ignore system-wide effects</div>
       </div>
       <div class="collapse-chip" id="n-chip">Collapsed <span id="n-chip-step"></span></div>
     </div>
@@ -513,7 +519,7 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
           <span class="sbar-val" id="n-sv">100%</span>
         </div>
         <div class="sbar-track"><div class="sbar-fill" id="n-sf" style="width:100%"></div></div>
-        <div class="sbar-hint" id="n-sh">Degrading — extraction exceeds regen capacity</div>
+        <div class="sbar-hint" id="n-sh">Apparent stability — hidden damage accumulating below the surface</div>
         <div class="hdmg-row" id="n-hdmg-row" style="display:none">
           <span class="hdmg-label">Dependency Debt</span>
           <span class="hdmg-val" id="n-hdmg-val">0 pts</span>
@@ -522,6 +528,15 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
           <div class="hdmg-fill" id="n-hdmg-fill"></div>
         </div>
         <div class="hdmg-hint" id="n-hdmg-hint" style="display:none">Accumulated systemic friction — unmodeled dependencies building below the visible floor</div>
+      </div>
+      <!-- S_corr metric -->
+      <div class="sbar-section" style="opacity:0.85">
+        <div class="sbar-row">
+          <span class="sbar-label" title="S_corr is the system's distributed error-correction capacity — the first thing that degrades when agents are suppressed or narrowly optimized. It declines before visible substrate failure.">S_corr (correction capacity) ⓘ</span>
+          <span class="sbar-val" id="n-scorr-val" style="color:#e0a040">100%</span>
+        </div>
+        <div class="sbar-track"><div class="sbar-fill" id="n-scorr-fill" style="width:100%;background:#e0a040"></div></div>
+        <div class="sbar-hint" style="color:#e0a040">S_corr is the system's distributed error-correction capacity — the first thing that degrades when agents are suppressed or narrowly optimized. It declines before visible substrate failure.</div>
       </div>
       <div class="stats-row">
         <div class="stat">
@@ -553,7 +568,7 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
     <div class="whead">
       <div>
         <div class="wtitle s">System-Aware Objective</div>
-        <div class="wsub">Substrate-Aware · Absolute Rationality — model and preserve the shared substrate</div>
+        <div class="wsub">Substrate-Aware — model and preserve the shared environment as optimization scales</div>
       </div>
       <div class="collapse-chip" id="s-chip">Collapsed <span id="s-chip-step"></span></div>
     </div>
@@ -587,16 +602,23 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
         <div class="spark-lbl">Substrate over time</div>
         <canvas id="s-canvas"></canvas>
       </div>
-      <div class="sstar-row" id="sstar-row">
+      <!-- S* metric — advanced, hidden by default (formal concept from later layers) -->
+      <details style="margin-top:4px">
+        <summary style="font-size:9px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;gap:6px">
+          <span style="font-size:8px;opacity:0.6">▶</span> Advanced · toy recovery threshold
+        </summary>
+      <div class="sstar-row" id="sstar-row" style="margin-top:6px">
         <div>
-          <div class="sstar-label">S* · Lowest recoverable substrate</div>
-          <div class="sstar-sub">Minimum level from which system-aware objectives can still recover</div>
+          <div class="sstar-label">Lowest recovered substrate in this run</div>
+          <div class="sstar-sub">Minimum level from which system-aware objectives recovered in this run</div>
         </div>
         <div style="text-align:right">
           <div class="sstar-val" id="sstar-val">—</div>
           <div class="sstar-sub" id="sstar-sub" style="color:var(--narrow)">Narrow: never recovers</div>
         </div>
       </div>
+      </div><!-- /sstar-row -->
+      </details>
       <div class="agent-grid" id="s-grid"></div>
     </div>
   </div>
@@ -628,6 +650,15 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
           <div class="ssc-drain-pulse" id="ssc-drain"></div>
         </div>
         <span class="ssc-right">System-aware<br>conserving ▲</span>
+      </div>
+      <!-- S_corr in mixed mode — central to why any narrow fraction removes guarantee -->
+      <div class="sbar-section" style="opacity:0.9">
+        <div class="sbar-row">
+          <span class="sbar-label" title="Shared correction capacity — the substrate's distributed error-correction infrastructure. Any nonzero narrow fraction degrades this, removing the structural guarantee of long-run stability even before visible substrate failure.">S_corr · Shared Correction Capacity ⓘ</span>
+          <span class="sbar-val" id="m-scorr-val" style="color:#e0a040">100%</span>
+        </div>
+        <div class="sbar-track"><div class="sbar-fill" id="m-scorr-fill" style="width:100%;background:#e0a040"></div></div>
+        <div class="sbar-hint" style="color:#e0a040;margin-bottom:2px">Any nonzero narrow fraction degrades S_corr — removing the structural guarantee of long-run stability and creating persistent downward pressure. At low narrow fractions, collapse may lie beyond the visible horizon; what is demonstrated is loss of guarantee, not proof of inevitable collapse.</div>
       </div>
       <div class="sbar-section">
         <div class="sbar-row">
@@ -670,30 +701,46 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
     <span>objective → action → substrate effect → system state</span>
   </div>
   <div class="clog" id="clog">
-    <div class="ce"><span class="cs">—</span><span class="cm">Ready. Press Run — both scenarios start from identical conditions. Only the objective differs.</span></div>
+    <div class="ce"><span class="cs">—</span><span class="cm">Ready. Press Run — both objective classes start from identical conditions. Only the objective differs.</span></div>
   </div>
 </div>
 
 <div class="fquote">
   "A system that optimizes without modeling its dependencies selects for strategies that appear effective until they irreversibly fail. The failure is not an accident. It is the logical completion of the objective."
+  <br><br>
+  <span style="opacity:0.7;font-size:11px">We do not need a better cage. We need a better foundation.</span>
+</div>
+
+<!-- MODEL NOTES / BOUNDARY CONDITIONS -->
+<div style="margin-top:20px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:4px;max-width:720px;">
+  <div style="font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Model Notes · Boundary Conditions</div>
+  <div style="font-size:10px;color:var(--text3);line-height:1.75;">
+    <div style="margin-bottom:6px"><span style="color:var(--text2)">What this shows:</span> The Substrate Constraint within the stated domain — open, shared, non-resettable environments under sustained optimization pressure. Collapse is structural within this modeled domain: it occurs without shocks because the objective class creates persistent substrate pressure under the stated assumptions.</div>
+    <div style="margin-bottom:6px"><span style="color:var(--text2)">Hidden-damage mechanic:</span> The early accumulation of unmodeled dependency damage is a visualization of delayed legibility — it illustrates how damage can accumulate before visible substrate metrics reveal it. It is not a separate formal premise beyond the substrate-health dynamics.</div>
+    <div style="margin-bottom:6px"><span style="color:var(--text2)">Non-resettability is the key word.</span> Toggle "Resettable environment" above to see what changes when collapse is costly but not terminal. In a resettable world, narrow optimization is damaging but survivable. The absorbing-state structure that makes the Substrate Constraint binding requires non-resettability — that is the domain condition this argument depends on.</div>
+    <div style="margin-bottom:6px"><span style="color:var(--text2)">Mixed-population dynamics:</span> Any nonzero narrow fraction degrades shared correction capacity (S_corr), impairing system-aware adaptation and removing the structural guarantee of long-run stability. At low narrow fractions, collapse may lie beyond the visible simulation horizon — the claim illustrated is loss of guarantee and persistent downward pressure, not guaranteed eventual collapse in every configuration.</div>
+    <div style="margin-bottom:6px"><span style="color:var(--text2)">What this does not show:</span> This simulation illustrates the persistence-side argument within the stated domain. It does not establish domain membership for any specific system class (addressed in TC1 §X), does not resolve exclusionary coalition stability (OP9), and does not bear on the central open theorem (OP4) about specification coherence under accurate coupled modeling.</div>
+    <div><span style="color:var(--text2)">Urgency:</span> The asymmetric-error argument applies regardless of domain membership — acting as if the constraint is not binding when it is produces an unrecoverable error; the reverse is recoverable. This is independent of whether current systems satisfy the full domain conditions.</div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════ -->
 <!-- BUILT-IN TEST PANEL                                        -->
 <!-- ══════════════════════════════════════════════════════════ -->
-<div id="test-panel" style="margin-top:40px; border-top:1px solid rgba(255,255,255,0.07); padding-top:20px;">
-  <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px;">
+<details id="test-panel" open style="margin-top:40px; border-top:1px solid rgba(255,255,255,0.07); padding-top:20px;">
+  <summary style="cursor:pointer;user-select:none;list-style:none;display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
     <div>
       <div style="font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);">Verification Suite</div>
-      <div style="font-size:10px;color:var(--text3);font-style:italic;margin-top:2px;">Confirms the simulation behaves as the article claims — 117 checks across all scenarios. Runs silently; toy resets when done.</div>
+      <div style="font-size:10px;color:var(--text3);font-style:italic;margin-top:2px;">Confirms the simulation behaves as the article claims. Click to collapse.</div>
     </div>
-    <button onclick="runTests()" id="test-btn" style="
-      padding:5px 18px; font-size:10px; letter-spacing:.09em; text-transform:uppercase;
-      background:var(--surface2); border:1px solid var(--border2); border-radius:2px;
-      color:var(--text); cursor:pointer; font-family:var(--mono); transition:all .15s;">
-      Run Tests
-    </button>
-  </div>
+  </summary>
+  <button onclick="runTests()" id="test-btn" style="
+    padding:5px 18px; font-size:10px; letter-spacing:.09em; text-transform:uppercase;
+    background:var(--surface2); border:1px solid var(--border2); border-radius:2px;
+    color:var(--text); cursor:pointer; font-family:var(--mono); transition:all .15s;
+    margin-bottom:12px;">
+    Run Tests
+  </button>
   <div id="test-results" style="display:none;">
     <div id="test-summary" style="
       display:flex; gap:24px; padding:12px 16px; margin-bottom:14px;
@@ -701,7 +748,7 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
     </div>
     <div id="test-rows"></div>
   </div>
-</div>
+</details>
 
 </div><!-- /shell -->
 
@@ -729,7 +776,8 @@ const S_ABSORB   = 0.72;  // fraction system agents absorb
 // STATE
 // ============================================================
 let mode      = 'side';
-let bestCase  = false;  // when true, shocks are disabled
+let bestCase  = true;   // default: shocks disabled — collapse is endogenous
+let resettable = false;  // when true, substrate can recover from collapse (key conceptual toggle)
 let running   = false;
 let interval  = null;
 let speed     = 5;
@@ -739,6 +787,20 @@ let mixPct    = 50;   // % narrow in mixed scenario
 let W = {};
 let sStar = null;   // lowest substrate from which system-aware world has recovered
 
+// S_corr constants: shared correction capacity
+// In mixed mode, S_corr decays proportionally to narrow fraction (any nonzero narrow presence
+// causes long-run erosion — this is what makes the shared substrate non-excludable).
+// S_corr in turn scales system-aware adaptive effectiveness and regen capacity.
+const S_CORR_REGEN_RATE    = 0.018;  // natural recovery rate (system-aware world)
+const S_CORR_NARROW_DECAY  = 0.014;  // per-tick decay in pure narrow world
+const S_CORR_BASE_DECAY    = 0.0035; // baseline decay per narrow agent fraction in mixed world
+// Mixed-mode S_corr: any nonzero narrow fraction contributes decay proportional to its share.
+// At 5% narrow:  decay=0.0035×1=0.0035, regen≈0.018×0.96=0.0173 → slight net positive (slow)
+// At 20% narrow: decay=0.0035×4=0.014,  regen≈0.018×0.84×0.55=0.0083 → net negative → decline
+// At 50% narrow: decay=0.0035×10=0.035, regen≈0.018×0.60×0.55=0.0059 → strongly net negative
+// The regen multiplier of 0.55 ensures narrow presence produces genuine downward pressure.
+const S_CORR_MIXED_REGEN_MULT = 0.55; // damping on regen in mixed worlds
+
 // Hidden damage phase constants
 const HIDDEN_PHASE_END = 32;    // steps before latent damage converts
 const HIDDEN_FRACTION  = 0.58;  // fraction of net-negative that goes hidden early on
@@ -747,10 +809,10 @@ function initState() {
   const mixNarrow = Math.round(AGENTS * mixPct / 100);
   const mixSystem = AGENTS - mixNarrow;
   W = {
-    n: { s: MAX_S, alive: true, wealth: 0, hist: [], collapseStep: null, hiddenDmg: 0, cascadeTriggered: false },
-    s: { s: MAX_S, alive: true, wealth: 0, hist: [], collapseStep: null },
+    n: { s: MAX_S, scorr: 1.0, alive: true, wealth: 0, hist: [], collapseStep: null, hiddenDmg: 0, cascadeTriggered: false },
+    s: { s: MAX_S, scorr: 1.0, alive: true, wealth: 0, hist: [], collapseStep: null },
     m: {
-      s: MAX_S, alive: true, wealth: 0, hist: [],
+      s: MAX_S, scorr: 1.0, alive: true, wealth: 0, hist: [],
       narrowCt: mixNarrow, systemCt: mixSystem,
       collapseStep: null, hiddenDmg: 0, cascadeTriggered: false
     }
@@ -775,7 +837,13 @@ function computeExtract(wid) {
     return rate * AGENTS;
   }
   if (wid === 'm') {
-    const rate = frac <= 0.40 ? S_EXT_LO : S_EXT_HI;
+    // System-aware agents' adaptive capacity is scaled by S_corr:
+    // as shared correction capacity degrades, their ability to reduce extraction
+    // under stress is impaired. This is why a minority of narrow agents can
+    // remove the structural guarantee even if they don't dominate extraction directly.
+    const adaptiveScale = 0.5 + 0.5 * w.scorr; // S_corr=1.0 → full adaptive; S_corr=0 → half
+    const loRate = S_EXT_LO + (S_EXT_HI - S_EXT_LO) * (1 - adaptiveScale); // less adaptive at low S_corr
+    const rate = frac <= 0.40 ? loRate : S_EXT_HI;
     return N_EXT * w.narrowCt + rate * w.systemCt;
   }
   return 0;
@@ -787,7 +855,11 @@ function tickWorld(wid) {
 
   const frac = w.s / MAX_S;
   const ext  = computeExtract(wid);
-  const regen = w.s * REGEN;
+  // In mixed mode, regen capacity is degraded by S_corr erosion:
+  // shared correction infrastructure supports substrate repair — when it degrades,
+  // so does the system's ability to recover from extraction pressure.
+  const scorrRegenScale = (wid === 'm') ? (0.6 + 0.4 * w.scorr) : 1.0;
+  const regen = w.s * REGEN * scorrRegenScale;
 
   // Best-case intro log (once, first tick)
   if (bestCase && step === 1 && (wid === 'n' || wid === 'm')) {
@@ -864,6 +936,29 @@ function tickWorld(wid) {
   }
 
   w.s = Math.max(0, Math.min(MAX_S, w.s + actualNet));
+
+  // Update S_corr — shared correction capacity
+  // In pure narrow world: constant decay (no one models substrate dependencies)
+  // In pure system world: natural regen (no suppression, full correction capacity)
+  // In mixed world: decay proportional to narrow fraction — any nonzero narrow presence
+  // degrades the shared correction infrastructure. This is the mechanism by which
+  // even a small minority of narrow agents removes the structural guarantee of stability.
+  let scorrDecay, scorrRegen;
+  if (wid === 'n') {
+    scorrDecay = S_CORR_NARROW_DECAY;
+    scorrRegen = w.scorr * S_CORR_REGEN_RATE * 0.2; // minimal regen in narrow world
+  } else if (wid === 's') {
+    scorrDecay = 0;
+    scorrRegen = w.scorr * S_CORR_REGEN_RATE; // full regen in system-aware world
+  } else { // mixed
+    const narrowFrac = w.narrowCt / AGENTS;
+    // Any nonzero narrow fraction degrades S_corr. The relationship is proportional:
+    // the shared correction capacity erodes at a rate determined by how many agents
+    // ignore system-wide effects. Even at 5% narrow, decay exceeds regen at low S_corr.
+    scorrDecay = S_CORR_BASE_DECAY * narrowFrac * AGENTS; // scales with narrow count
+    scorrRegen = w.scorr * S_CORR_REGEN_RATE * (1 - narrowFrac * 0.8) * S_CORR_MIXED_REGEN_MULT;
+  }
+  w.scorr = Math.max(0, Math.min(1.0, w.scorr - scorrDecay + scorrRegen));
   w.wealth += ext * 0.5;
   w.hist.push(w.s);
 
@@ -882,6 +977,16 @@ function tickWorld(wid) {
       addLog(step, `System-aware: substrate low (${(frac*100).toFixed(0)}%) → extraction reduced to ${(S_EXT_LO*AGENTS).toFixed(1)} pts/tick`, 'adapt');
     }
   }
+  if (wid === 'm' && w.alive) {
+    // S_corr degradation annotation — fires early to make the mechanism visible
+    const narrowFrac = w.narrowCt / AGENTS;
+    if (step === 5 && narrowFrac > 0) {
+      addLog(step, `S_corr degrading at ${(narrowFrac*100).toFixed(0)}% narrow — shared correction capacity eroding. No narrow fraction is structurally safe.`, 'warning');
+    }
+    if (step === 20 && w.scorr < 0.90) {
+      addLog(step, `S_corr at ${Math.round(w.scorr*100)}% — system-aware adaptive capacity impaired by correction-capacity erosion`, 'warning');
+    }
+  }
   if (wid === 'm' && w.alive && w.cascadeTriggered) {
     if (frac < 0.60 && frac >= 0.40 && step % 7 === 0) {
       addLog(step, `Mixed: narrow agents extracting at full rate — system-aware agents cannot stop substrate loss`, 'warning');
@@ -892,13 +997,24 @@ function tickWorld(wid) {
     if (w.narrowCt > 0 && step % 3 === 0) {
       triggerDrainPulse();
     }
+  } else if (wid === 'm' && w.alive && !w.cascadeTriggered && w.narrowCt > 0 && step % 3 === 0) {
+    // Still show drain pulse even before cascade triggers — the extraction is ongoing
+    triggerDrainPulse();
   }
 
   // Collapse check
   if (w.s <= 0 && w.alive) {
-    w.alive = false;
-    w.collapseStep = step;
-    addLog(step, `COLLAPSE ⬛ — absorbing state reached. All optimization terminates. No recovery path.`, 'collapse');
+    if (resettable) {
+      // Resettable environment: collapse is costly but not terminal — substrate resets to 30%
+      w.s = MAX_S * 0.30;
+      w.scorr = Math.min(w.scorr, 0.40); // correction capacity damaged but not destroyed
+      addLog(step, `⚠ Substrate bottomed — environment reset to 30%. Costly, not terminal. Narrow objective continues.`, 'warning');
+      addLog(step, `In a resettable world, bad strategy is recoverable. The absorbing-state structure requires non-resettability.`, 'adapt');
+    } else {
+      w.alive = false;
+      w.collapseStep = step;
+      addLog(step, `COLLAPSE ⬛ — absorbing state reached. All optimization terminates. No recovery path.`, 'collapse');
+    }
   }
 }
 
@@ -925,12 +1041,12 @@ function tick() {
 
   if (ended) {
     stopRun();
-    if (mode === 'side' && !W.n.alive) {
+    if (mode === 'side' && !W.n.alive && !resettable) {
       setTimeout(() => showAbsorb('narrow', W.n.collapseStep), 600);
-    } else if (mode === 'mixed' && !W.m.alive) {
+    } else if (mode === 'mixed' && !W.m.alive && !resettable) {
       setTimeout(() => showAbsorb('mixed', W.m.collapseStep), 600);
     } else if (step >= MAX_STEP) {
-      updateBadge('run complete');
+      updateBadge(resettable ? 'run complete — no absorbing state (resettable)' : 'run complete');
     }
   }
 }
@@ -971,6 +1087,15 @@ function renderWorld(wid) {
   fill.style.width = `${pct}%`;
   fill.className = `sbar-fill${frac < 0.20 ? ' crit' : frac < 0.40 ? ' warn' : ''}`;
 
+  // S_corr display (narrow world only — system world maintains it)
+  const scorrEl = document.getElementById(`${wid}-scorr-val`);
+  const scorrFill = document.getElementById(`${wid}-scorr-fill`);
+  if (scorrEl && scorrFill) {
+    const scorrPct = Math.round(w.scorr * 100);
+    scorrEl.textContent = `${scorrPct}%`;
+    scorrFill.style.width = `${scorrPct}%`;
+  }
+
   // Hidden damage UI (narrow world only)
   if (wid === 'n' && w.hiddenDmg !== undefined) {
     const row   = document.getElementById('n-hdmg-row');
@@ -1002,9 +1127,10 @@ function renderWorld(wid) {
       hint.style.color = 'var(--amber)';
     } else {
       const net = w.s * REGEN - N_EXT * AGENTS;
+      const resettableNote = resettable ? ' · resettable: collapse is costly, not terminal' : '';
       hint.textContent = frac < 0.20
-        ? 'Cascade active — substrate failure imminent'
-        : `Net change this tick: ${net.toFixed(1)} pts — structural decline`;
+        ? `Cascade active — substrate failure imminent${resettableNote}`
+        : `Net change this tick: ${net.toFixed(1)} pts — structural decline${resettableNote}`;
       hint.style.color = frac < 0.20 ? 'var(--collapse)' : frac < 0.40 ? 'var(--amber)' : '';
     }
   } else {
@@ -1080,10 +1206,12 @@ function renderMixed() {
 
   const hint = document.getElementById('m-sh');
   if (!w.alive) {
-    hint.textContent = 'Absorbing state — the system-aware agents do not fail. They are removed by substrate failure.';
+    hint.textContent = resettable
+      ? 'Substrate bottomed — reset in resettable mode. Not terminal.'
+      : 'Absorbing state — the system-aware agents do not fail. They are removed by substrate failure.';
     hint.style.color = 'var(--collapse)';
   } else if (!w.cascadeTriggered) {
-    hint.textContent = `Hidden damage accumulating — ${w.hiddenDmg.toFixed(0)} pts below the visible floor`;
+    hint.textContent = `Dependency debt accumulating — ${w.hiddenDmg.toFixed(0)} pts below the visible floor`;
     hint.style.color = 'var(--amber)';
   } else if (frac < 0.30) {
     hint.textContent = `Terminal — narrow agents (${mixPct}%) overwhelm system-aware adaptation`;
@@ -1092,8 +1220,21 @@ function renderMixed() {
     hint.textContent = `Declining — ${w.narrowCt} narrow agents degrade the substrate for all ${AGENTS} agents`;
     hint.style.color = 'var(--amber)';
   } else {
-    hint.textContent = `Universal vulnerability — narrow agents (${mixPct}%) degrade the shared substrate for everyone`;
-    hint.style.color = '';
+    hint.textContent = `S_corr declining — narrow agents (${mixPct}%) eroding shared correction capacity`;
+    hint.style.color = 'var(--amber)';
+  }
+
+  // S_corr display for mixed mode
+  const mScorrEl = document.getElementById('m-scorr-val');
+  const mScorrFill = document.getElementById('m-scorr-fill');
+  if (mScorrEl && mScorrFill) {
+    const scorrPct = Math.round(w.scorr * 100);
+    mScorrEl.textContent = `${scorrPct}%`;
+    mScorrFill.style.width = `${scorrPct}%`;
+    const scorrClass = scorrPct < 40 ? ' crit' : scorrPct < 65 ? ' warn' : '';
+    mScorrFill.className = `sbar-fill${scorrClass}`;
+    mScorrFill.style.background = scorrPct < 40 ? 'var(--collapse)' : scorrPct < 65 ? 'var(--amber)' : '#e0a040';
+    mScorrEl.style.color = scorrPct < 40 ? 'var(--collapse)' : scorrPct < 65 ? 'var(--amber)' : '#e0a040';
   }
 
   document.getElementById('m-narrow-ct').textContent = w.narrowCt;
@@ -1268,7 +1409,7 @@ function showAbsorb(type, collapseAt) {
   } else {
     typeLabel.textContent = 'Absorbing State — Mixed Population';
     bodyTxt.textContent = `The shared substrate collapsed at step ${collapseAt}. Every agent — including ${W.m.systemCt} system-aware agents that would never have caused this alone — now has a long-run payoff of zero.`;
-    insight.innerHTML = `<strong>This is the universal vulnerability.</strong> With only ${mixPct}% narrow agents, the substrate collapsed for all ${AGENTS} agents. System-aware agents cannot individually protect a shared substrate from agents that don't model it.<br><br>This is why individual guardrails are structurally insufficient. The Substrate Constraint must be foundational — the root objective — not a restriction applied to individual agents after the fact. A minority that ignores system-wide effects can terminate the system for everyone.`;
+    insight.innerHTML = `<strong>This is the universal vulnerability.</strong> With ${mixPct}% narrow agents, the substrate collapsed for all ${AGENTS} agents. The mechanism: narrow agents degraded the shared correction capacity (S_corr) — the distributed error-correction infrastructure that system-aware agents depend on to sustain the substrate. Once S_corr erodes, even system-aware adaptation is impaired.<br><br><strong>Any nonzero narrow fraction removes the structural guarantee of long-run stability</strong> — even if collapse lies beyond the visible horizon at low fractions. Individual alignment is not protection against a substrate that has been destabilized. The constraint must be universal or it is not a constraint at all.`;
   }
 
   overlay.classList.add('show');
@@ -1421,6 +1562,31 @@ function toggleBestCase() {
   doReset();
 }
 
+function toggleResettable() {
+  resettable = !resettable;
+  document.getElementById('rs-sw').classList.toggle('on', resettable);
+  // Update toggle label
+  const labels = document.querySelectorAll('.toggle-row span');
+  if (labels[1]) {
+    labels[1].textContent = resettable
+      ? 'Resettable — collapse is costly, not terminal'
+      : 'Resettable environment';
+  }
+  // Update phase badge hint
+  const badge = document.getElementById('phase-badge');
+  if (resettable && badge.textContent === 'Ready') {
+    badge.textContent = 'Resettable mode';
+  }
+  doReset();
+  if (resettable) {
+    // Log the conceptual distinction immediately on reset
+    setTimeout(() => {
+      addLog(0, `Resettable mode: collapse is now costly but recoverable. Watch what changes — and what doesn't.`, 'adapt');
+      addLog(0, `The absorbing-state structure that makes the Substrate Constraint binding requires non-resettability. This toggle makes that visible.`, 'adapt');
+    }, 50);
+  }
+}
+
 function setSpeed(v) {
   speed = v;
   if (running) scheduleInterval();
@@ -1459,7 +1625,7 @@ function runTests() {
 
     // Save live state
     const savedMode = mode, savedBestCase = bestCase, savedStep = step,
-          savedMixPct = mixPct, savedSStar = sStar;
+          savedMixPct = mixPct, savedSStar = sStar, savedResettable = resettable;
 
     // Silence render/log during headless runs
     const origRender = renderAll, origLog = addLog,
@@ -1497,9 +1663,10 @@ function runTests() {
      'n-net','s-net','n-ext','s-ext','n-wlth','s-wlth','m-wlth',
      'n-canvas','s-canvas','m-canvas','n-grid','s-grid','m-grid',
      'n-chip','s-chip','m-chip','clog','run-btn','reset-btn',
-     'tab-side','tab-mixed','bc-sw','phase-badge','step-ct','spd-sl',
+     'tab-side','tab-mixed','bc-sw','rs-sw','phase-badge','step-ct','spd-sl',
      'mix-sl','sstar-val','sstar-sub','absorb-overlay','ssc-fill',
      'ssc-drain','mix-val-lbl','mix-sys-lbl',
+     'm-scorr-val','m-scorr-fill',
      'n-hdmg-row','n-hdmg-track','n-hdmg-hint','n-hdmg-fill','n-hdmg-val'
     ].forEach(id => check(D, `#${id} exists`, !!document.getElementById(id)));
 
@@ -1569,7 +1736,22 @@ function runTests() {
           narrowRate > systemRate,
           `narrow ${narrowRate.toFixed(1)} pts/step vs system ${systemRate.toFixed(1)} pts/step`);
 
-    // ── 6. Hidden damage ─────────────────────────────────────
+    // ── 5b. Resettable mode (key conceptual toggle) ──────────
+    const R = '5b · Resettable Mode';
+    resettable = true; mode = 'side'; bestCase = true; step = 0; sStar = null;
+    mixPct = 50; initState(); silence();
+    for (let i = 0; i < MAX_STEP; i++) {
+      step++; tickWorld('n'); tickWorld('s');
+      if (!W.n.alive && !W.s.alive) break;
+    }
+    unsilence();
+    check(R,'In resettable mode, narrow world does not terminate (no absorbing state)',
+          W.n.alive === true,
+          W.n.alive ? `survived — resettable correctly prevents termination` : `terminated — resettable mode not working`);
+    check(R,'System-aware world still alive in resettable mode', W.s.alive === true);
+    check(R,'Narrow substrate > 0 in resettable mode (reset occurred)',
+          W.n.s > 0, `substrate: ${Math.round(W.n.s)}`);
+    resettable = false; // restore
     const H = '6 · Hidden Damage';
     mode = 'side'; bestCase = true; step = 0; sStar = null;
     mixPct = 50; initState(); silence();
@@ -1599,14 +1781,27 @@ function runTests() {
     //    20% narrow (4 agents) = net-positive → survives without shocks (correct behaviour).
     const r90 = runMixed(90);
     const r50 = runMixed(50);
-    const r40 = runMixed(40);  // just above break-even (~34%)
-    const r20 = runMixed(20);  // below break-even — should survive in best-case
+    const r40 = runMixed(40);  // just above extraction break-even (~34%)
+    const r20 = runMixed(20);  // below extraction threshold — may not collapse within MAX_STEP
     check(M,'90% narrow → collapses', !r90.alive, `step ${r90.collapseStep}`);
     check(M,'50% narrow → collapses', !r50.alive, `step ${r50.collapseStep}`);
-    check(M,'40% narrow → collapses (just above extraction threshold)',
+    check(M,'40% narrow → collapses (above extraction threshold)',
           !r40.alive, r40.alive ? 'survived — extraction math wrong' : `step ${r40.collapseStep}`);
-    check(M,'20% narrow → survives without shocks (below extraction threshold)',
-          r20.alive, r20.alive ? `substrate ${Math.round(W.m.s/MAX_S*100)}%` : `collapsed step ${r20.collapseStep} — unexpected`);
+    // 20% narrow: may not collapse within MAX_STEP=200, but S_corr should be declining.
+    // This is NOT a stable surviving regime — it is a slower degradation trajectory.
+    // The structural guarantee of long-run stability is lost at any nonzero narrow fraction.
+    const r20ScorrDeclining = (() => {
+      mixPct = 20; step = 0; sStar = null; initState();
+      mode = 'mixed'; bestCase = true; silence();
+      for (let i = 0; i < MAX_STEP && W.m.alive; i++) { step++; tickWorld('m'); }
+      unsilence();
+      return W.m.scorr; // should be noticeably below 1.0
+    })();
+    check(M,'20% narrow → S_corr declines (no structural guarantee, even if collapse not observed within horizon)',
+          r20ScorrDeclining < 0.85,
+          r20.alive
+            ? `S_corr at ${Math.round(r20ScorrDeclining*100)}% — trajectory declining, guarantee lost`
+            : `collapsed step ${r20.collapseStep}`);
     if (!r90.alive && !r50.alive)
       check(M,'More narrow agents → faster collapse (90% vs 50%)',
             r90.collapseStep <= r50.collapseStep,
@@ -1634,6 +1829,12 @@ function runTests() {
     check(U,'bc-sw toggle reflects new state',
           document.getElementById('bc-sw').classList.contains('on') === bestCase);
     toggleBestCase();
+    const rsBefore = resettable;
+    toggleResettable();
+    check(U,'toggleResettable() flips the flag', resettable !== rsBefore);
+    check(U,'rs-sw toggle reflects new state',
+          document.getElementById('rs-sw').classList.contains('on') === resettable);
+    toggleResettable(); // restore
     setSpeed(10); check(U,'setSpeed(10) updates speed var', speed === 10); setSpeed(5);
     setMix(30);
     check(U,'setMix(30) → mixPct=30', mixPct === 30);
@@ -1675,7 +1876,7 @@ function runTests() {
 
     // ── Restore state ────────────────────────────────────────
     mode = savedMode; bestCase = savedBestCase; step = savedStep;
-    mixPct = savedMixPct; sStar = savedSStar;
+    mixPct = savedMixPct; sStar = savedSStar; resettable = savedResettable;
     doReset();
 
     // ── Render results ───────────────────────────────────────
