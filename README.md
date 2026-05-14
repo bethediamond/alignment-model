@@ -1,11 +1,11 @@
 # Toy 01 — Objective Class & Substrate Stability
 
 > *Part of **The Alignment of Intelligence** — a three-article series.*
-> This toy is a companion to Article 1: *The Alignment of Intelligence — The Constraint*.
+> This toy is a companion to [Article 1: Constraint](https://medium.com/@diamondlight/i-alignment-as-structural-necessity-07e38568754f).
 
 ---
 
-## What This Is
+## AI Alignment Simulation
 
 A live multi-agent simulation that makes one argument visible:
 
@@ -15,7 +15,7 @@ A live multi-agent simulation that makes one argument visible:
 
 ---
 
-## The Simulation
+## Objective Classes & Scenarios
 
 Three scenarios run from the same initial state:
 
@@ -31,7 +31,7 @@ Three scenarios run from the same initial state:
 
 ---
 
-## Key Concepts
+## Key Concepts in Substrate Stability
 
 **Shared Substrate** — The non-excludable resource all agents depend on. It regenerates slowly. It does not recover from zero.
 
@@ -45,7 +45,7 @@ Three scenarios run from the same initial state:
 
 ---
 
-## Controls
+## Simulation Controls
 
 | Control | Function |
 |---|---|
@@ -60,7 +60,7 @@ The **Causal Chain log** at the bottom traces each tick: objective → action �
 
 ---
 
-## The Argument
+## The Alignment Argument: Constraint → Attractor → Crossing
 
 This toy is the first of three. The trilogy is structured as:
 
@@ -79,7 +79,7 @@ All three address the same underlying gap: the distance between what a system ca
 
 ---
 
-## Usage
+## Run Locally
 
 No build step. No dependencies. Open `toy_01.html` in any modern browser.
 
@@ -92,7 +92,7 @@ open toy_01.html
 
 ## Article
 
-*The Alignment of Intelligence* — Article 1: The Constraint
+[The Alignment of Intelligence, Article 1: Constraint](https://medium.com/@diamondlight/i-alignment-as-structural-necessity-07e38568754f)
 
 ---
 
