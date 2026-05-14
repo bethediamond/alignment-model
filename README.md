@@ -1,21 +1,21 @@
 # Toy 01 — Objective Class & Substrate Stability
 
 > *Part of **The Alignment of Intelligence** — a three-article series.*
-> This toy is a companion to [Article 1: Constraint](https://medium.com/@diamondlight/i-alignment-as-structural-necessity-07e38568754f).
+> This toy is a companion to Article 1: *The Alignment of Intelligence — The Constraint*.
 
 ---
 
-## AI Alignment Simulation
+## What This Is
 
 A live multi-agent simulation that makes one argument visible:
 
 > **The structure of an objective — not the capability of the agent — determines whether optimization is self-sustaining or self-terminating.**
 
-100 steps. 20 agents. Identical starting conditions. The only variable is whether each agent's objective models the shared environment it depends on. Watch what that single structural difference produces.
+200 steps. 20 agents. Identical starting conditions. The only variable is whether each agent's objective models the shared environment it depends on. Watch what that single structural difference produces.
 
 ---
 
-## Objective Classes & Scenarios
+## The Simulation
 
 Three scenarios run from the same initial state:
 
@@ -31,7 +31,7 @@ Three scenarios run from the same initial state:
 
 ---
 
-## Key Concepts in Substrate Stability
+## Key Concepts
 
 **Shared Substrate** — The non-excludable resource all agents depend on. It regenerates slowly. It does not recover from zero.
 
@@ -39,13 +39,13 @@ Three scenarios run from the same initial state:
 
 **Dependency Debt** — Hidden damage accumulating below the visible substrate floor. The narrow objective produces apparent stability while systematically building toward a failure it cannot detect.
 
-**S\*** — The minimum substrate level from which a system-aware objective can still recover. The narrow objective never reaches it.
+**Toy recovery threshold** — The lowest substrate level from which the system-aware objective recovered in a given run. Derived from behavior, not imposed by model parameters. The narrow objective never reaches it.
 
-**Best-Case Mode** — Removes environmental shocks. The narrow objective still collapses. The failure is architectural, not circumstantial.
+**Best-Case Mode** — Removes environmental shocks. The narrow objective still collapses. The failure is structural to the objective class under the stated domain conditions, not circumstantial.
 
 ---
 
-## Simulation Controls
+## Controls
 
 | Control | Function |
 |---|---|
@@ -60,7 +60,7 @@ The **Causal Chain log** at the bottom traces each tick: objective → action �
 
 ---
 
-## The Alignment Argument: Constraint → Attractor → Crossing
+## The Argument
 
 This toy is the first of three. The trilogy is structured as:
 
@@ -71,15 +71,15 @@ Constraint  →  Attractor  →  Crossing
 
 **Article 1 (this toy):** Eliminates invalid objectives. Any objective that ignores system-wide effects is structurally self-terminating — not under adversarial conditions, not eventually, but as the logical completion of the optimization.
 
-**Article 2:** Identifies the surviving region. What does optimization converge toward once self-defeating objectives have been removed?
+**Article 2:** Identifies the attractor-direction within the surviving region. What does structural pressure point toward once self-defeating objectives have been removed?
 
-**Article 3:** Determines reachability. The control variable governing whether real systems arrive at the attractor before encountering the states Article 1 excludes.
+**Article 3:** Determines reachability. The control variable governing whether real systems arrive at the viable region before encountering the absorbing states Article 1 excludes.
 
-All three reduce to one constraint: whether capability outpaces the system's ability to model its own effects.
+All three address the same underlying gap: the distance between what a system can do and what it can accurately model about the consequences of doing it.
 
 ---
 
-## Run Locally
+## Usage
 
 No build step. No dependencies. Open `toy_01.html` in any modern browser.
 
@@ -92,7 +92,7 @@ open toy_01.html
 
 ## Article
 
-[The Alignment of Intelligence, Article 1: Constraint](https://medium.com/@diamondlight/i-alignment-as-structural-necessity-07e38568754f)
+*The Alignment of Intelligence* — Article 1: The Constraint
 
 ---
 
