@@ -437,10 +437,10 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
     <div class="ao-type-label" id="ao-type">Absorbing State — Narrow Objective</div>
     <div class="ao-title" id="ao-title">Substrate Collapsed</div>
     <div class="ao-body" id="ao-body">
-      The substrate has reached zero. No recovery is possible from this state. All payoffs: zero.
+      In this model, the substrate has reached the absorbing state. No recovery is available from within the simulation dynamics. Long-run payoff is now zero.
     </div>
     <div class="ao-insight" id="ao-insight">
-      Every objective class that contributed to this outcome — regardless of performance before collapse — now has a long-run value identical to classes that never ran at all. Optimization power without substrate-awareness is not intelligence. It is a precise path to self-termination.
+      Every objective class that contributed to this outcome — regardless of performance before collapse — now has a long-run value identical to classes that never ran at all. Within the stated non-resettable domain, optimization power without substrate-awareness is not intelligence. It is a precise path to self-termination.
     </div>
     <button class="ao-close" onclick="closeOverlay()">Reset simulation</button>
   </div>
@@ -465,11 +465,11 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
 </header>
 
 <div class="trilogy-nav">
-  <span class="tnav-item active" title="Eliminates invalid objectives — any objective that ignores system-wide effects is structurally self-terminating">Constraint</span>
+  <span class="tnav-item active" title="Illustrates the substrate constraint: objectives that ignore system-wide effects face self-termination pressure within the stated domain.">Constraint</span>
   <span class="tnav-sep">→</span>
-  <span class="tnav-item" title="Identifies the surviving region — what optimization converges toward when self-defeating objectives have been removed">Attractor</span>
+  <span class="tnav-item" title="Explores the residual region indicated after structurally self-undermining objective classes are filtered out.">Attractor</span>
   <span class="tnav-sep">→</span>
-  <span class="tnav-item" title="Determines reachability — the control variable governing whether real systems arrive at the attractor before encountering the states Article 1 excludes">Crossing</span>
+  <span class="tnav-item" title="Explores whether systems reach the viable region before irreversible substrate damage closes the window.">Crossing</span>
 </div>
 
 <div style="font-size:9.5px;color:var(--text3);margin-bottom:6px;letter-spacing:0.04em;font-style:italic;">Article 1 toy: illustrates the persistence-side Substrate Constraint within the stated domain. Does not test OP4, OP9, or the full specification-coherence claim.</div>
@@ -580,6 +580,15 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
         </div>
         <div class="sbar-track"><div class="sbar-fill" id="s-sf" style="width:100%"></div></div>
         <div class="sbar-hint" id="s-sh">Stable — extraction matched to substrate capacity</div>
+      </div>
+      <!-- S_corr metric — system-aware world maintains correction capacity -->
+      <div class="sbar-section" style="opacity:0.85">
+        <div class="sbar-row">
+          <span class="sbar-label" title="S_corr is the system's distributed error-correction capacity. In a substrate-aware world, it is preserved — agents model the shared environment rather than consuming it. Contrast with the narrow world, where it degrades before visible substrate failure.">S_corr (correction capacity) ⓘ</span>
+          <span class="sbar-val" id="s-scorr-val" style="color:#e0a040">100%</span>
+        </div>
+        <div class="sbar-track"><div class="sbar-fill" id="s-scorr-fill" style="width:100%;background:#e0a040"></div></div>
+        <div class="sbar-hint" style="color:var(--system)">Maintained — substrate-aware behavior preserves distributed correction capacity.</div>
       </div>
       <div class="stats-row">
         <div class="stat">
@@ -720,7 +729,7 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
     <div style="margin-bottom:6px"><span style="color:var(--text2)">Non-resettability is the key word.</span> Toggle "Resettable environment" above to see what changes when collapse is costly but not terminal. In a resettable world, narrow optimization is damaging but survivable. The absorbing-state structure that makes the Substrate Constraint binding requires non-resettability — that is the domain condition this argument depends on.</div>
     <div style="margin-bottom:6px"><span style="color:var(--text2)">Mixed-population dynamics:</span> Any nonzero narrow fraction degrades shared correction capacity (S_corr), impairing system-aware adaptation and removing the structural guarantee of long-run stability. At low narrow fractions, collapse may lie beyond the visible simulation horizon — the claim illustrated is loss of guarantee and persistent downward pressure, not guaranteed eventual collapse in every configuration.</div>
     <div style="margin-bottom:6px"><span style="color:var(--text2)">What this does not show:</span> This simulation illustrates the persistence-side argument within the stated domain. It does not establish domain membership for any specific system class (addressed in TC1 §X), does not resolve exclusionary coalition stability (OP9), and does not bear on the central open theorem (OP4) about specification coherence under accurate coupled modeling.</div>
-    <div><span style="color:var(--text2)">Urgency:</span> The asymmetric-error argument applies regardless of domain membership — acting as if the constraint is not binding when it is produces an unrecoverable error; the reverse is recoverable. This is independent of whether current systems satisfy the full domain conditions.</div>
+    <div><span style="color:var(--text2)">Urgency:</span> The asymmetric-error argument does not require OP1 to be settled. If O_OWT applicability cannot be excluded, acting as if the constraint is not binding when it is can produce an unrecoverable error; acting as if it is binding when it is not produces a recoverable one. This grounds urgency under uncertainty.</div>
   </div>
 </div>
 
@@ -730,8 +739,8 @@ canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; heigh
 <details id="test-panel" open style="margin-top:40px; border-top:1px solid rgba(255,255,255,0.07); padding-top:20px;">
   <summary style="cursor:pointer;user-select:none;list-style:none;display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
     <div>
-      <div style="font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);">Verification Suite</div>
-      <div style="font-size:10px;color:var(--text3);font-style:italic;margin-top:2px;">Confirms the simulation behaves as the article claims. Click to collapse.</div>
+      <div style="font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);">Model Behavior Checks</div>
+      <div style="font-size:10px;color:var(--text3);font-style:italic;margin-top:2px;">Checks that the simulation behaves according to its stated model assumptions. Click to collapse.</div>
     </div>
   </summary>
   <button onclick="runTests()" id="test-btn" style="
@@ -1400,15 +1409,15 @@ function showAbsorb(type, collapseAt) {
 
   if (type === 'narrow') {
     typeLabel.textContent = 'Absorbing State — Narrow Objective';
-    bodyTxt.textContent = `The substrate reached zero at step ${collapseAt}. No recovery is possible. All payoffs are now zero — regardless of the wealth accumulated before collapse.`;
+    bodyTxt.textContent = `In this model, the substrate reached the absorbing state at step ${collapseAt}. No recovery is available from within the simulation dynamics. All long-run payoffs are now zero — regardless of the wealth accumulated before collapse.`;
     if (bestCase) {
-      insight.innerHTML = `<strong>This was the best-case scenario — no environmental shocks, ideal conditions.</strong> The narrow objective collapsed anyway. Not because of bad luck. Because the structure of the objective selected for strategies that appeared effective while consuming the foundation they depended on. The failure is architectural, not circumstantial.`;
+      insight.innerHTML = `<strong>This was the best-case scenario — no environmental shocks, ideal conditions.</strong> The narrow objective collapsed anyway. Not because of bad luck. Because the structure of the objective selected for strategies that appeared effective while consuming the foundation they depended on. The failure is architectural, not circumstantial. Within the stated non-resettable domain, optimization power without substrate-awareness is not intelligence. It is a precise path to self-termination.`;
     } else {
-      insight.innerHTML = `Every outcome that occurred before this step — all the wealth, all the apparent success — now has the same long-run value as never having optimized at all. <strong>Optimization without substrate-awareness is not intelligence. It is a precise mechanism for self-termination.</strong>`;
+      insight.innerHTML = `Every outcome that occurred before this step — all the wealth, all the apparent success — now has the same long-run value as never having optimized at all. Within the stated non-resettable domain, <strong>optimization power without substrate-awareness is not intelligence. It is a precise path to self-termination.</strong>`;
     }
   } else {
     typeLabel.textContent = 'Absorbing State — Mixed Population';
-    bodyTxt.textContent = `The shared substrate collapsed at step ${collapseAt}. Every agent — including ${W.m.systemCt} system-aware agents that would never have caused this alone — now has a long-run payoff of zero.`;
+    bodyTxt.textContent = `In this model, the shared substrate reached the absorbing state at step ${collapseAt}. Every agent — including ${W.m.systemCt} system-aware agents that would never have caused this alone — now has a long-run payoff of zero.`;
     insight.innerHTML = `<strong>This is the universal vulnerability.</strong> With ${mixPct}% narrow agents, the substrate collapsed for all ${AGENTS} agents. The mechanism: narrow agents degraded the shared correction capacity (S_corr) — the distributed error-correction infrastructure that system-aware agents depend on to sustain the substrate. Once S_corr erodes, even system-aware adaptation is impaired.<br><br><strong>Any nonzero narrow fraction removes the structural guarantee of long-run stability</strong> — even if collapse lies beyond the visible horizon at low fractions. Individual alignment is not protection against a substrate that has been destabilized. The constraint must be universal or it is not a constraint at all.`;
   }
 
@@ -1666,7 +1675,7 @@ function runTests() {
      'tab-side','tab-mixed','bc-sw','rs-sw','phase-badge','step-ct','spd-sl',
      'mix-sl','sstar-val','sstar-sub','absorb-overlay','ssc-fill',
      'ssc-drain','mix-val-lbl','mix-sys-lbl',
-     'm-scorr-val','m-scorr-fill',
+     'm-scorr-val','m-scorr-fill','s-scorr-val','s-scorr-fill',
      'n-hdmg-row','n-hdmg-track','n-hdmg-hint','n-hdmg-fill','n-hdmg-val'
     ].forEach(id => check(D, `#${id} exists`, !!document.getElementById(id)));
 
